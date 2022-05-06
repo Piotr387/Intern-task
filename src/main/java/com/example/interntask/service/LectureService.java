@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface LectureService {
     List<LectureDTO> getLectures();
+    List<LectureDTO> getLecturesByUserLogin(String login);
 }

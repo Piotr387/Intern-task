@@ -15,10 +15,15 @@ public class UserEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = IDENTITY)
     private long id;
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String login;
     private String email;
-    @ManyToMany(mappedBy = "userEntityList")
+    @ManyToMany(cascade = { CascadeType.ALL })
+    @JoinTable(
+            name = "user_lecture",
+            joinColumns = { @JoinColumn(name = "user_id") },
+            inverseJoinColumns = { @JoinColumn(name = "lecture_id") }
+    )
     private List<LectureEntity> lectureEntityList = new ArrayList<>(3);
 
     public UserEntity() {

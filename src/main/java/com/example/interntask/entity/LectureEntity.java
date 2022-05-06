@@ -19,12 +19,7 @@ public class LectureEntity {
     private String name;
     @Column(name = "start_time")
     private LocalTime startTime;
-    @ManyToMany(cascade = { CascadeType.ALL })
-    @JoinTable(
-            name = "lecture_user",
-            joinColumns = { @JoinColumn(name = "lecture_id") },
-            inverseJoinColumns = { @JoinColumn(name = "user_id") }
-    )
+    @ManyToMany(mappedBy = "lectureEntityList")
     private List<UserEntity> userEntityList = new ArrayList<>(CAPACITY);
 
     public LectureEntity() {

@@ -4,6 +4,7 @@ import com.example.interntask.entity.LectureEntity;
 import com.example.interntask.entity.UserEntity;
 import com.example.interntask.repositories.LectureRepository;
 import com.example.interntask.repositories.UserRepository;
+import org.apache.catalina.User;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -42,6 +43,8 @@ public class InternTaskApplication {
                 new LectureEntity("Lecture 2 at 14:00", LocalTime.of(14,0)),
                 new LectureEntity("Lecture 3 at 14:00", LocalTime.of(14,0))
         ));
+
+
         /**
          * Saving inital data to our in-memory database
          */
@@ -51,6 +54,20 @@ public class InternTaskApplication {
 
         UserRepository userRepository =
                 configurableApplicationContext.getBean(UserRepository.class);
+        userRepository.saveAll(userEntityList);
+
+        /**
+         * Assining Lecture entity to users "hard coded" for test purpose
+         */
+        userEntityList.get(0).getLectureEntityList().add(lectureEntityList.get(0));
+        userEntityList.get(0).getLectureEntityList().add(lectureEntityList.get(3));
+        userEntityList.get(0).getLectureEntityList().add(lectureEntityList.get(6));
+        userEntityList.get(1).getLectureEntityList().add(lectureEntityList.get(0));
+        userEntityList.get(1).getLectureEntityList().add(lectureEntityList.get(3));
+        userEntityList.get(1).getLectureEntityList().add(lectureEntityList.get(6));
+        userEntityList.get(2).getLectureEntityList().add(lectureEntityList.get(1));
+        userEntityList.get(2).getLectureEntityList().add(lectureEntityList.get(3));
+
         userRepository.saveAll(userEntityList);
 
     }
