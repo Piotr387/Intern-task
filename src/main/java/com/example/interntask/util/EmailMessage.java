@@ -12,7 +12,7 @@ public class EmailMessage {
         String dateOfSend = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
         String message = "Dziękujemy za rejestracje " + userEntity.getLogin() + ", " +
                 "zostałeś pomyślnie zapisany na " + lectureEntity.getName() + " " +
-                "start wydarzenia " + lectureEntity.getStartTime() + " pod koniec wydarzenia " +
+                "start wydarzenia " + lectureEntity.getStartTime() + " pod koniec prelekcji " +
                 "przewidziana przerwa na kawę";
         return dateOfSend + ", " + userEntity.getEmail() + ", " + message + "\n";
     }

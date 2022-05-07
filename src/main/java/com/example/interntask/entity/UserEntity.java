@@ -18,7 +18,7 @@ public class UserEntity implements Serializable {
     @Column(nullable = false, unique = true)
     private String login;
     private String email;
-    @ManyToMany(cascade = { CascadeType.ALL })
+    @ManyToMany(cascade = { CascadeType.PERSIST })
     @JoinTable(
             name = "user_lecture",
             joinColumns = { @JoinColumn(name = "user_id") },

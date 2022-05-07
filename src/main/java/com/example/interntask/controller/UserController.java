@@ -39,4 +39,10 @@ public class UserController {
         return userService.signUp(lectureSignUpDTO);
     }
 
+    @DeleteMapping(path = "/{id}/cancel/{lectureId}")
+    public String cancelReservation(@PathVariable(name = "id") String userId, @PathVariable(name = "lectureId") String letureId){
+        userService.cancelReservation(userId, letureId);
+        return "SUCCESS";
+    }
+
 }

@@ -73,4 +73,16 @@ public class UserServiceImplementation implements UserService {
 
         return returnValue.get();
     }
+
+    @Override
+    public void cancelReservation(String userId, String letureId) {
+        UserEntity userEntity = userRepository.findById(Long.valueOf(userId)).orElseThrow( () -> {
+            throw new RuntimeException("No user found with provided id");
+        });
+
+        userEntity.getLectureEntityList().removeIf( lectureEntity ->
+           Long.valueOf(letureId).equals(lectureEntity.getId()));
+
+        userRepository.save(userEntity);
+    }
 }

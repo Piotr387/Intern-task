@@ -1,1 +1,2 @@
-Sat May 07 17:22:07 CEST 2022, mail12@mail.com, Dziękujemy za rejestracje username12, zostałeś pomyślnie zapisany na Lecture 2 at 10:00 start wydarzenia 10:00 pod koniec wydarzenia powiedzinia przerwa na kawę
+2022-05-07 17:48:24, mail12@mail.com, Dziękujemy za rejestracje username12, zostałeś pomyślnie zapisany na Lecture 2 at 10:00 start wydarzenia 10:00 pod koniec prelekcji przewidziana przerwa na kawę
+2022-05-07 17:48:25, mail18@mail.com, Dziękujemy za rejestracje username18, zostałeś pomyślnie zapisany na Lecture 1 at 10:00 start wydarzenia 10:00 pod koniec prelekcji przewidziana przerwa na kawę
