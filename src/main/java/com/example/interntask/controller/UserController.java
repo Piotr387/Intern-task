@@ -1,6 +1,7 @@
 package com.example.interntask.controller;
 
 import com.example.interntask.DTO.LectureDTO;
+import com.example.interntask.DTO.LectureSignUpDTO;
 import com.example.interntask.DTO.UserDTO;
 import com.example.interntask.entity.UserEntity;
 import com.example.interntask.service.LectureService;
@@ -33,9 +34,9 @@ public class UserController {
         return lectureService.getLecturesByUserLogin(login);
     }
 
-    @PostMapping(path = "/sign-up/{lectureName}")
-    public String signUpUserForLecture(@PathVariable String lectureName,@RequestBody UserDTO userDTO){
-        return userService.signUp(lectureName,userDTO);
+    @PostMapping(path = "/sign-up")
+    public String signUpUserForLecture(@RequestBody LectureSignUpDTO lectureSignUpDTO){
+        return userService.signUp(lectureSignUpDTO);
     }
 
 }

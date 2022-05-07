@@ -1,5 +1,6 @@
 package com.example.interntask.service.implementation;
 
+import com.example.interntask.DTO.LectureSignUpDTO;
 import com.example.interntask.DTO.UserDTO;
 import com.example.interntask.entity.UserEntity;
 import com.example.interntask.repositories.LectureRepository;
@@ -30,20 +31,21 @@ public class UserServiceImplementation implements UserService {
     }
 
     @Override
-    public String signUp(String lectureName, UserDTO userDTO) {
+    public String signUp(LectureSignUpDTO lectureSignUpDTO) {
         AtomicReference<String> returnValue = new AtomicReference<>("ERROR");
 
         // Check for existing user by login, If user not exists in database then add to repository
-        UserEntity userEntity = userRepository.findByLogin(userDTO.getLogin()).orElseGet(
-                () -> userRepository.save(new ModelMapper().map(userDTO, UserEntity.class)));
-        //Check if login isn't busy by other email
-        if (!userEntity.getEmail().equals(userDTO.getEmail())) {
+        UserEntity userEntity = userRepository.findByLogin(lectureSignUpDTO.getUserDTO().getLogin()).orElseGet(
+                () -> userRepository.save(new ModelMapper().map(lectureSignUpDTO.getUserDTO(), UserEntity.class)));
+
+        //Check if login isn't taken by other email
+        if (!userEntity.getEmail().equals(lectureSignUpDTO.getUserDTO().getEmail())) {
             throw new RuntimeException("Podany login jest już zajęty");
         }
 
         //Find lecture by name otherwise throw exception
         //If found check if user is free at this time
-        lectureRepository.findByName(lectureName).ifPresentOrElse(
+        lectureRepository.findByName(lectureSignUpDTO.getLectureName()).ifPresentOrElse(
                 lectureEntity -> {
                     boolean isUserFree = userEntity.getLectureEntityList().stream()
                             .anyMatch(lecture -> lectureEntity.getStartTime().equals(lecture.getStartTime()));
