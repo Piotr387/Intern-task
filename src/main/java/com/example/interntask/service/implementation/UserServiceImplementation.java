@@ -5,6 +5,7 @@ import com.example.interntask.DTO.UserDTO;
 import com.example.interntask.entity.UserEntity;
 import com.example.interntask.repositories.LectureRepository;
 import com.example.interntask.repositories.UserRepository;
+import com.example.interntask.service.EmailService;
 import com.example.interntask.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,9 @@ public class UserServiceImplementation implements UserService {
 
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    EmailService emailService;
 
     @Override
     public List<UserDTO> getUsers() {
@@ -56,6 +60,7 @@ public class UserServiceImplementation implements UserService {
                     if (lectureEntity.getUserEntityList().size() < lectureEntity.getCAPACITY()) {
                         userEntity.getLectureEntityList().add(lectureEntity);
                         userRepository.save(userEntity);
+                        emailService.sendEmail(userEntity, lectureEntity);
                         returnValue.set("SUCCES");
                     } else {
                         throw new RuntimeException("Brak wolnych miejsc w wybranym wydarzeniu");
