@@ -33,4 +33,9 @@ public class UserController {
         return lectureService.getLecturesByUserLogin(login);
     }
 
+    @PostMapping(path = "/sign-up/{lectureName}")
+    public String signUpUserForLecture(@PathVariable String lectureName,@RequestBody UserDTO userDTO){
+        return userService.signUp(lectureName,userDTO);
+    }
+
 }
