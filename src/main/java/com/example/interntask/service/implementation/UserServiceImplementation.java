@@ -85,4 +85,17 @@ public class UserServiceImplementation implements UserService {
 
         userRepository.save(userEntity);
     }
+
+    @Override
+    public void updateEmail(String userId, String newEmail) {
+        userRepository.findById(Long.valueOf(userId)).ifPresentOrElse(
+                user -> {
+                    if (user.getEmail().equals(newEmail))
+                        throw new RuntimeException("Provided new email is same as previous one");
+                    user.setEmail(newEmail);
+                    userRepository.save(user);
+                },
+                () -> {throw new RuntimeException("No user found with provided id");}
+        );
+    }
 }

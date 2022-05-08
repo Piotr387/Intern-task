@@ -45,4 +45,9 @@ public class UserController {
         return "SUCCESS";
     }
 
+    @PutMapping(path = "/{id}/update-email")
+    public String updateEmail(@PathVariable(name = "id") String userId, @RequestBody String newEmail){
+        userService.updateEmail(userId,newEmail);
+        return "SUCCESS";
+    }
 }
