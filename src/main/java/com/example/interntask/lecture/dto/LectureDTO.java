@@ -1,5 +1,6 @@
-package com.example.interntask.DTO;
+package com.example.interntask.lecture.dto;
 
+import com.example.interntask.user.UserDTO;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,6 +8,11 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalTime;
 import java.util.List;
+
+/**
+ * Class responsible for data transfer object most of the time from LectureEntity
+ * Objects of this type are return or accept as a @RequestBody
+ */
 
 @Data
 @AllArgsConstructor

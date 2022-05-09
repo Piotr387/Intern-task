@@ -1,4 +1,6 @@
-package com.example.interntask.entity;
+package com.example.interntask.user;
+
+import com.example.interntask.lecture.LectureEntity;
 
 import javax.persistence.*;
 import java.io.Serial;
@@ -7,6 +9,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static javax.persistence.GenerationType.IDENTITY;
+
+/**
+ * Class that stores information about user data structure in databse.
+ */
 
 @Entity(name = "users")
 public class UserEntity implements Serializable {

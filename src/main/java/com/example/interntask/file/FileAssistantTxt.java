@@ -1,13 +1,14 @@
-package com.example.interntask.util;
+package com.example.interntask.file;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 
-public class FileAssistant {
+public class FileAssistantTxt implements FileAssistant {
     private static final String FILENAME = "powiadomienia.txt";
 
-    public static void writeToTheEndOfFile(String message) {
+    public void writeToTheEndOfFile(String message) {
+        // Try catch block with resources
         try (FileWriter fileWriter = new FileWriter(FILENAME, true);
              BufferedWriter bufferedWriter = new BufferedWriter(fileWriter)){
             bufferedWriter.append(message);

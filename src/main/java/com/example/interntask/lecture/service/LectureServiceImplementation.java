@@ -1,18 +1,20 @@
-package com.example.interntask.service.implementation;
+package com.example.interntask.lecture.service;
 
-import com.example.interntask.DTO.LectureDTO;
-import com.example.interntask.DTO.statistics.LectureStatisticsDAO;
-import com.example.interntask.DTO.statistics.LectureThematicStatisticDAO;
-import com.example.interntask.entity.LectureEntity;
-import com.example.interntask.entity.UserEntity;
-import com.example.interntask.repositories.LectureRepository;
-import com.example.interntask.repositories.UserRepository;
-import com.example.interntask.service.LectureService;
+import com.example.interntask.lecture.dto.LectureDTO;
+import com.example.interntask.lecture.dto.LectureStatisticsDAO;
+import com.example.interntask.lecture.dto.LectureThematicStatisticDAO;
+import com.example.interntask.lecture.LectureEntity;
+import com.example.interntask.user.UserEntity;
+import com.example.interntask.lecture.LectureRepository;
+import com.example.interntask.user.UserRepository;
+import com.example.interntask.lecture.service.LectureService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service

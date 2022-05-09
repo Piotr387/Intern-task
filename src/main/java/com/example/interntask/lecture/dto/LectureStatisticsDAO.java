@@ -1,15 +1,20 @@
-package com.example.interntask.DTO.statistics;
+package com.example.interntask.lecture.dto;
 
-import com.example.interntask.DTO.LectureDTO;
-import com.example.interntask.entity.LectureEntity;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.databind.util.BeanUtil;
+import com.example.interntask.lecture.LectureEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.modelmapper.ModelMapper;
 
-import java.time.LocalTime;
+/**
+ * Class is used in one case it's a return type on url below
+ * GET http://localhost:8080/users/statistics/lectures-popularity
+ * Main goal of this class is to nicely represent statistics about each lecture
+ * it contains data about lecture and also information about seat capacity on lecture and seatTaken
+ * Last field is busySeatsOverAllUsers which is a number expressed in percentage
+ * It's taking seatTaken and it's divided by number of all register user.
+ * in future, it will take number of user with role "USER"
+ */
 
 @Data
 @AllArgsConstructor

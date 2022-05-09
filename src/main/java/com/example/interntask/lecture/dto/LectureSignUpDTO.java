@@ -1,8 +1,14 @@
-package com.example.interntask.DTO;
+package com.example.interntask.lecture.dto;
 
+import com.example.interntask.user.UserDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+/**
+ * Class is used in one case to sign up user for the lecture
+ * It's used as a @RequestBody
+ */
 
 @Data
 @NoArgsConstructor

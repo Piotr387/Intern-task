@@ -1,6 +1,6 @@
-package com.example.interntask.entity;
+package com.example.interntask.lecture;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.example.interntask.user.UserEntity;
 
 import javax.persistence.*;
 import java.time.LocalTime;
@@ -8,6 +8,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static javax.persistence.GenerationType.IDENTITY;
+
+/**
+ * Class that stores information about structure in databse.
+ */
 
 @Entity(name = "lectures")
 public class LectureEntity {

@@ -1,7 +1,7 @@
-package com.example.interntask.service;
+package com.example.interntask.email;
 
-import com.example.interntask.entity.LectureEntity;
-import com.example.interntask.entity.UserEntity;
+import com.example.interntask.lecture.LectureEntity;
+import com.example.interntask.user.UserEntity;
 
 public interface EmailService {
     /**

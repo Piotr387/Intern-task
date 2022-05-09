@@ -1,8 +1,17 @@
-package com.example.interntask.DTO.statistics;
+package com.example.interntask.lecture.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+/**
+ * Class is used in one case it's a return type on url below
+ * GET http://localhost:8080/users/statistics/thematic-path-popularity
+ * Main goal of this class is to nicely represent statistics about lecture's thematic path
+ * it contains data about lecture thematic name, all takenSeats expressed in percentage
+ * it takes all busy seats in each thematic path and it's divided by all busy seats
+ * (sum of all busy seats in each category, contains user duplication on different hours)
+ */
 
 @Data
 @AllArgsConstructor

@@ -1,12 +1,11 @@
-package com.example.interntask.service.implementation;
+package com.example.interntask.user.service;
 
-import com.example.interntask.DTO.LectureSignUpDTO;
-import com.example.interntask.DTO.UserDTO;
-import com.example.interntask.entity.UserEntity;
-import com.example.interntask.repositories.LectureRepository;
-import com.example.interntask.repositories.UserRepository;
-import com.example.interntask.service.EmailService;
-import com.example.interntask.service.UserService;
+import com.example.interntask.lecture.dto.LectureSignUpDTO;
+import com.example.interntask.user.UserDTO;
+import com.example.interntask.user.UserEntity;
+import com.example.interntask.lecture.LectureRepository;
+import com.example.interntask.user.UserRepository;
+import com.example.interntask.email.EmailService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
