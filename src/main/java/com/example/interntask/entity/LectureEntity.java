@@ -17,6 +17,8 @@ public class LectureEntity {
     @GeneratedValue(strategy = IDENTITY)
     private long id;
     private String name;
+    @Column(name = "thematic_path")
+    private String thematicPath;
     @Column(name = "start_time")
     private LocalTime startTime;
     @ManyToMany(mappedBy = "lectureEntityList")
@@ -25,8 +27,9 @@ public class LectureEntity {
     public LectureEntity() {
     }
 
-    public LectureEntity(String name, LocalTime startTime) {
+    public LectureEntity(String name, String thematicPath, LocalTime startTime) {
         this.name = name;
+        this.thematicPath = thematicPath;
         this.startTime = startTime;
     }
 
@@ -50,6 +53,14 @@ public class LectureEntity {
         this.name = name;
     }
 
+    public String getThematicPath() {
+        return thematicPath;
+    }
+
+    public void setThematicPath(String thematicPath) {
+        this.thematicPath = thematicPath;
+    }
+
     public LocalTime getStartTime() {
         return startTime;
     }
@@ -64,5 +75,9 @@ public class LectureEntity {
 
     public void setUserEntityList(List<UserEntity> userEntityList) {
         this.userEntityList = userEntityList;
+    }
+
+    public int getUserEntityListSize(){
+        return userEntityList.size();
     }
 }

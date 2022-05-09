@@ -33,15 +33,15 @@ public class InternTaskApplication {
                 new UserEntity("username6","mail6@mail.com")
         ));
         List<LectureEntity> lectureEntityList = new ArrayList<>(Arrays.asList(
-                new LectureEntity("Lecture 1 at 10:00", LocalTime.of(10,0)),
-                new LectureEntity("Lecture 2 at 10:00", LocalTime.of(10,0)),
-                new LectureEntity("Lecture 3 at 10:00", LocalTime.of(10,0)),
-                new LectureEntity("Lecture 1 at 12:00", LocalTime.of(12,0)),
-                new LectureEntity("Lecture 2 at 12:00", LocalTime.of(12,0)),
-                new LectureEntity("Lecture 3 at 12:00", LocalTime.of(12,0)),
-                new LectureEntity("Lecture 1 at 14:00", LocalTime.of(14,0)),
-                new LectureEntity("Lecture 2 at 14:00", LocalTime.of(14,0)),
-                new LectureEntity("Lecture 3 at 14:00", LocalTime.of(14,0))
+                new LectureEntity("Lecture 1 at 10:00","Frontend",  LocalTime.of(10,0)),
+                new LectureEntity("Lecture 2 at 10:00","Backend", LocalTime.of(10,0)),
+                new LectureEntity("Lecture 3 at 10:00","Architect", LocalTime.of(10,0)),
+                new LectureEntity("Lecture 1 at 12:00","Frontend", LocalTime.of(12,0)),
+                new LectureEntity("Lecture 2 at 12:00","Backend", LocalTime.of(12,0)),
+                new LectureEntity("Lecture 3 at 12:00","Architect", LocalTime.of(12,0)),
+                new LectureEntity("Lecture 1 at 14:00","Frontend", LocalTime.of(14,0)),
+                new LectureEntity("Lecture 2 at 14:00","Backend", LocalTime.of(14,0)),
+                new LectureEntity("Lecture 3 at 14:00","Architect", LocalTime.of(14,0))
         ));
 
 

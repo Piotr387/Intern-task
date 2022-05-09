@@ -13,6 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 public class LectureDTO {
     private String name;
+    private String thematicPath;
     private LocalTime startTime;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private List<UserDTO> userDTOList;
