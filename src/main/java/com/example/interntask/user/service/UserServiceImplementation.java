@@ -1,6 +1,8 @@
 package com.example.interntask.user.service;
 
 import com.example.interntask.lecture.dto.LectureSignUpDTO;
+import com.example.interntask.role.RoleEntity;
+import com.example.interntask.role.RoleRepository;
 import com.example.interntask.user.UserDTO;
 import com.example.interntask.user.UserEntity;
 import com.example.interntask.lecture.LectureRepository;
@@ -27,6 +29,9 @@ public class UserServiceImplementation implements UserService {
     @Autowired
     EmailService emailService;
 
+    @Autowired
+    RoleRepository roleRepository;
+
     @Override
     public List<UserDTO> getUsers() {
         return userRepository.findAll().stream()
@@ -41,7 +46,11 @@ public class UserServiceImplementation implements UserService {
 
         // Check for existing user by login, If user not exists in database then add to repository
         UserEntity userEntity = userRepository.findByLogin(lectureSignUpDTO.getUserDTO().getLogin()).orElseGet(
-                () -> userRepository.save(new ModelMapper().map(lectureSignUpDTO.getUserDTO(), UserEntity.class)));
+                () -> {
+                    UserEntity user = userRepository.save(new ModelMapper().map(lectureSignUpDTO.getUserDTO(), UserEntity.class));
+                    addRoleToUser(user.getLogin(), "ROLE_USER");
+                    return user;
+                });
 
         //Check if login isn't taken by other email
         if (!userEntity.getEmail().equals(lectureSignUpDTO.getUserDTO().getEmail())) {
@@ -97,4 +106,17 @@ public class UserServiceImplementation implements UserService {
                 () -> {throw new RuntimeException("No user found with provided id");}
         );
     }
+
+    @Override
+    public void addRoleToUser(String username, String roleName) {
+        UserEntity userEntity = userRepository.findByLogin(username).orElseThrow(() -> {
+            throw new RuntimeException("No user found with provided login");
+        });
+        RoleEntity roleEntity = roleRepository.findByName(roleName).orElseThrow( () -> {
+            throw new RuntimeException("No role found with provided name");
+        });
+        userEntity.getRoles().add(roleEntity);
+    }
+
+
 }

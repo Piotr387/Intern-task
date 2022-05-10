@@ -1,7 +1,9 @@
 package com.example.interntask.user.service;
 
 import com.example.interntask.lecture.dto.LectureSignUpDTO;
+import com.example.interntask.role.RoleEntity;
 import com.example.interntask.user.UserDTO;
+import com.example.interntask.user.UserEntity;
 
 import java.util.List;
 
@@ -19,4 +21,5 @@ public interface UserService {
     void cancelReservation(String userId, String letureId);
 
     void updateEmail(String userId, String newEmail);
+    void addRoleToUser(String username, String roleName);
 }

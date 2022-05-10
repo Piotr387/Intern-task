@@ -1,6 +1,7 @@
 package com.example.interntask.user;
 
 import com.example.interntask.lecture.LectureEntity;
+import com.example.interntask.role.RoleEntity;
 
 import javax.persistence.*;
 import java.io.Serial;
@@ -11,7 +12,8 @@ import java.util.List;
 import static javax.persistence.GenerationType.IDENTITY;
 
 /**
- * Class that stores information about user data structure in databse.
+ * Class that stores information about user data structure in databse
+ * Default value: roleEntities = ROLE_USER
  */
 
 @Entity(name = "users")
@@ -24,6 +26,8 @@ public class UserEntity implements Serializable {
     @Column(nullable = false, unique = true)
     private String login;
     private String email;
+    @Column(name = "encrypted_password")
+    private String encryptedPassword;
     @ManyToMany(cascade = { CascadeType.PERSIST })
     @JoinTable(
             name = "user_lecture",
@@ -32,12 +36,24 @@ public class UserEntity implements Serializable {
     )
     private List<LectureEntity> lectureEntityList = new ArrayList<>(3);
 
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "users_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private List<RoleEntity> roleEntities = new ArrayList<>();
+
     public UserEntity() {
     }
 
     public UserEntity(String login, String email) {
+        this(login,email,"123");
+    }
+
+    public UserEntity(String login, String email, String password) {
         this.login = login;
         this.email = email;
+        this.encryptedPassword = password;
     }
 
     public long getId() {
@@ -62,6 +78,22 @@ public class UserEntity implements Serializable {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getEncryptedPassword() {
+        return encryptedPassword;
+    }
+
+    public void setEncryptedPassword(String encryptedPassword) {
+        this.encryptedPassword = encryptedPassword;
+    }
+
+    public List<RoleEntity> getRoles() {
+        return roleEntities;
+    }
+
+    public void setRoles(List<RoleEntity> roleEntities) {
+        this.roleEntities = roleEntities;
     }
 
     public List<LectureEntity> getLectureEntityList() {

@@ -4,6 +4,8 @@ import com.example.interntask.lecture.dto.LectureDTO;
 import com.example.interntask.lecture.dto.LectureStatisticsDAO;
 import com.example.interntask.lecture.dto.LectureThematicStatisticDAO;
 import com.example.interntask.lecture.LectureEntity;
+import com.example.interntask.role.RoleEntity;
+import com.example.interntask.role.RoleRepository;
 import com.example.interntask.user.UserEntity;
 import com.example.interntask.lecture.LectureRepository;
 import com.example.interntask.user.UserRepository;
@@ -25,6 +27,9 @@ public class LectureServiceImplementation implements LectureService {
 
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    RoleRepository roleRepository;
 
     @Override
     public List<LectureDTO> getLectures() {
@@ -48,12 +53,20 @@ public class LectureServiceImplementation implements LectureService {
     @Override
     public List<LectureStatisticsDAO> getLecturesByPopularity() {
 
+        RoleEntity roleEntity = roleRepository.findByName("ROLE_USER").orElseThrow( () -> {
+            throw new RuntimeException("No such a role with provided name");
+        });
+
+        long listCount = userRepository.findAll().stream()
+                .filter( user -> user.getRoles().contains(roleEntity))
+                .count();
+
         //Get list of all lectures and convert to LectureStatisticsDAO
         List<LectureStatisticsDAO> lectureStatisticsDAOList = lectureRepository.findAll().stream()
                 .map( lecture ->
                     new LectureStatisticsDAO(
                             lecture,
-                            (int)userRepository.count()))
+                            listCount))
                 .collect(Collectors.toList());
 
         //Sort by busySeats/

@@ -22,4 +22,9 @@ public class UserDTO {
     private String email;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private List<LectureDTO> lectureDTOList;
+
+    public UserDTO(String login, String email) {
+        this.login = login;
+        this.email = email;
+    }
 }
