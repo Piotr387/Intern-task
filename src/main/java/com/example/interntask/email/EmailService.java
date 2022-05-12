@@ -11,4 +11,12 @@ public interface EmailService {
      * @param lectureEntity details about lecture that user just sign in
      */
     void sendEmail(UserEntity userEntity, LectureEntity lectureEntity);
+
+    /**
+     * This method is responsible for sending email invitation message with generated passowrd
+     * For intern task this method will write email message to the end of file "powiadomienia"
+     * @param userEntity  this param will give us access to email and user login
+     * @param password generated system via system
+     */
+    void sendInvitationEmail(UserEntity userEntity, String password);
 }

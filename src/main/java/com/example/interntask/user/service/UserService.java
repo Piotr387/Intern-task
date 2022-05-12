@@ -1,10 +1,13 @@
 package com.example.interntask.user.service;
 
+import com.example.interntask.lecture.dto.LectureDTO;
 import com.example.interntask.lecture.dto.LectureSignUpDTO;
-import com.example.interntask.role.RoleEntity;
 import com.example.interntask.user.UserDTO;
 import com.example.interntask.user.UserEntity;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -17,9 +20,25 @@ import java.util.List;
 
 public interface UserService {
     List<UserDTO> getUsers();
-    String signUp(LectureSignUpDTO lectureSignUpDTO);
-    void cancelReservation(String userId, String letureId);
+    UserEntity createUser(UserDTO userDTO);
+    UserEntity createUserWithpassword(UserDTO userDTO, String password);
 
-    void updateEmail(String userId, String newEmail);
-    void addRoleToUser(String username, String roleName);
+    String signUp(LectureSignUpDTO lectureSignUpDTO);
+
+    String signUpRegister(HttpServletRequest request);
+
+    String signUpForLecture(UserEntity userEntity, String lectureName);
+
+    void cancelReservation(HttpServletRequest request);
+
+    void updateEmail(HttpServletRequest request);
+    void addRoleToUser(UserEntity userEntity, String roleName);
+
+    UserEntity getUser(String login);
+
+    void getRefreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException;
+
+    List<LectureDTO> getUserLecture(HttpServletRequest request);
+
+    UserDTO getUserAccountDetails(HttpServletRequest request);
 }

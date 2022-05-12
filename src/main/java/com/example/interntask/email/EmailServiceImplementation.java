@@ -14,4 +14,10 @@ public class EmailServiceImplementation implements EmailService {
         FileAssistant fileAssistant = new FileAssistantTxt();
         fileAssistant.writeToTheEndOfFile(EmailMessage.createMessage(userEntity,lectureEntity));
     }
+
+    @Override
+    public void sendInvitationEmail(UserEntity userEntity, String password) {
+        FileAssistant fileAssistant = new FileAssistantTxt();
+        fileAssistant.writeToTheEndOfFile(EmailMessage.sendRegistrationEmail(userEntity,password));
+    }
 }

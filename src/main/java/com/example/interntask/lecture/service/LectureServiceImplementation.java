@@ -9,11 +9,11 @@ import com.example.interntask.role.RoleRepository;
 import com.example.interntask.user.UserEntity;
 import com.example.interntask.lecture.LectureRepository;
 import com.example.interntask.user.UserRepository;
-import com.example.interntask.lecture.service.LectureService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;

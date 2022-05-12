@@ -23,4 +23,13 @@ public class EmailMessage {
                 "przewidziana przerwa na kawę";
         return dateOfSend + ", " + userEntity.getEmail() + ", " + message + "\n";
     }
+
+    public static String sendRegistrationEmail(UserEntity userEntity, String password){
+        String dateOfSend = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+        String message = "Dziękujemy za rejestracje w naszym systemie " + userEntity.getLogin() + ", " +
+                "Od teraz zapisywać się na kolejne prelekcje możes z poziomu konta. " +
+                "Posiadając konto możesz zarządzać swoimi rezerwacjami. Twoje dane logowania: " +
+                "Login: " + userEntity.getLogin() + " hasło: " + password;
+        return dateOfSend + ", " + userEntity.getEmail() + ", " + message + "\n";
+    }
 }

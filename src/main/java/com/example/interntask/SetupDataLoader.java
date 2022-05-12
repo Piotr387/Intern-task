@@ -9,6 +9,7 @@ import com.example.interntask.user.UserDTO;
 import com.example.interntask.user.UserEntity;
 import com.example.interntask.user.UserRepository;
 import com.example.interntask.user.service.UserService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -87,18 +88,34 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
                 new LectureSignUpDTO("Lecture 2 at 14:00", new UserDTO("username8","mail8@mail.com"))
         ));
         userList.forEach(
-                user -> userService.signUp(user)
+                user -> {
+                    userRepository.findByLogin(user.getUserDTO().getLogin()).ifPresentOrElse(
+                            userEntity -> {
+                                userService.signUpForLecture(userEntity, user.getLectureName());
+                            },
+                            () -> userService.signUp(user)
+                    );
+                }
         );
 
         /**
-         * Saving one user with higer privileges
+         * Saving one user with organizer role and other normal username
+         * for test purspose (bypassing the password generator)
          */
         RoleEntity roleOrganizer = roleRepository.findByName("ROLE_ORGANIZER").orElseThrow( () -> {
             throw new RuntimeException("No role found with provided name");
         });
-        UserEntity userEntity = new UserEntity("organizator1", "organizer@mail.com");
-        userEntity.getRoles().add(roleOrganizer);
-        userRepository.save(userEntity);
+        UserEntity userOrganizator = userService.createUserWithpassword(new UserDTO("organizator1", "organizator1@gmail.com"), "organizator1");
+        userOrganizator.getRoles().add(roleOrganizer);
+        userRepository.save(userOrganizator);
+
+
+        RoleEntity roleUser = roleRepository.findByName("ROLE_USER").orElseThrow( () -> {
+            throw new RuntimeException("No role found with provided name");
+        });
+        UserEntity userTest = userService.createUserWithpassword(new UserDTO("test", "test@gmail.com"), "test");
+        userTest.getRoles().add(roleUser);
+        userRepository.save(userTest);
 
         alreadySetup = true;
     }
