@@ -33,4 +33,8 @@ public interface Utilities {
     void tokenCreatingException(Exception e, HttpServletResponse response) throws IOException;
 
     boolean patternMatches(String str, String regexPattern);
+
+    String getUsernameRegexPattern();
+
+    String getEmailRegexPattern();
 }

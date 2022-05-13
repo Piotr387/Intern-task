@@ -79,6 +79,11 @@ public class UserServiceImplementation implements UserService, UserDetailsServic
     @Override
     @Transactional(rollbackOn = Exception.class)
     public UserEntity createUser(UserDTO userDTO) {
+        if (!utilities.patternMatches(userDTO.getLogin(),utilities.getUsernameRegexPattern()))
+            throw new RuntimeException(ErrorMessages.LOGIN_MISS_PATTERN.getErrorMessage());
+        if (!utilities.patternMatches(userDTO.getEmail(),utilities.getEmailRegexPattern()))
+            throw new RuntimeException(ErrorMessages.EMAIL_MISS_PATTERN.getErrorMessage());
+
         return createUserWithPassword(userDTO, utilities.generatePassword());
     }
 
@@ -161,6 +166,8 @@ public class UserServiceImplementation implements UserService, UserDetailsServic
                 user -> {
                     if (user.getEmail().equals(request.getParameter("newEmail")))
                         throw new RuntimeException(ErrorMessages.EMAIL_ERROR_SAME_AS_PREVIOUS.getErrorMessage());
+                    if (!utilities.patternMatches(request.getParameter("newEmail"),utilities.getEmailRegexPattern()))
+                        throw new RuntimeException(ErrorMessages.EMAIL_MISS_PATTERN.getErrorMessage());
                     user.setEmail(request.getParameter("newEmail"));
                     userRepository.save(user);
                 },

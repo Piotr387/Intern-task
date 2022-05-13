@@ -6,15 +6,28 @@ Użytkownik który zapisze się na pierwsze wydarzenie dostanie maila z danymi l
 Endpointy dla użytkownikow niezarejestrowanych i zajrestrowanych zostały rozdzielone tak aby inni użytkownicy nie mogli zapisac innego użytkownika na daną prelekcje.  
 Po zalogowaniu się należy skopiować access_token otrzymany w odpowiedzi od serwera aby otrzymać dostęp do zabiezpieczonych endpointów. Po zalogowaniu został wygenerowany również refresh_token
 tak aby po wygaśnięciu access_tokena można było wysłać requesta na odpowiedni endpoint w celu wygenerowania nowego access_tokena bez konieczności ponownego logowania się.
-
-### **_Uruchomienie projektu_**:
-
+ 
+### **_Uruchomienie projektu_**:  
+1. Sposób I:    
+   a. Sklonowanie repozytorium przy pomocy linka `https://github.com/Piotr387/Intern-task.git`  
+   b. Otwarcie projektu przy pomocy środowiska programistycznego  
+   c. Zbudowanie i uruchomienie projektu (poprawnośc dzialania projektu była testowana na wersji 17.0.2)  
+2. Sposób II:  
+   a. Pobranie zbudowanego pliku przy pomocy Maven: `https://github.com/Piotr387/Intern-task/releases/tag/v1.0.0`  
+   b. Uruchomienie konsoli w katologu w kótrym umieściliśmy plik .jar  
+   c. Uruchomienie przy pomocy komendy `java -jar .\Intern-task-1.0.0-RELEASE.jar`  
+3. Sposób III (wymagane środowisko Docker, rekomendowany sposób jeśli w poprzednich pojawią się błędy):  
+   a. Link do zadania na dockerhub: `https://hub.docker.com/repository/docker/ajres/intern-task`  
+   b. Lub po prostu wpisanie komendy w konsoli: `docker run --rm --name intern-task -p 8080:8080 ajres/intern-task:v1.0.0`
+   c. Dostęp do pliku powiadomienia.txt przy użyciu komendy `docker exec -it intern-task cat powiadomienia.txt` **UWAGA**! Kontener musi być uruchomiony, najlepiej użyć drugiej konsoli
 
 ### **_Adresy url_**
 #### Plik Intern_Task.postman_collection.json zawiera wyeksportowaną kolekcja zapytać z POSTMAN
 
 1. Lista wszystkich prelekcji, metoda GET : `http://localhost:8080/lectures`
 2. Zapis na prelekcje (dla użytkownika niezarejestrowanego) POST: `http://localhost:8080/users/sign-up/` -> body
+`login pattern: Username pattern: Length >=3, Valid characters: a-z, A-Z, 0-9, points, dashes and underscores.`
+`email pattern RFC 5322 standard`
 ```json
 {
     "lectureName": "Lecture 1 at 12:00",

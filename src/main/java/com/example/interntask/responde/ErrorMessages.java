@@ -13,7 +13,9 @@ public enum ErrorMessages {
     REFRESH_TOKEN_MISSING("Refresh token is missing"),
     NO_TOKEN_PROVIDED("No token provided"),
     DELETE_ERROR("No lecture name found in user's repository. Make sure you provided good lecture name."),
-    AUTHENTICATION_FAIL("Authentication Failed. Make sure you provided corret login and password");
+    AUTHENTICATION_FAIL("Authentication Failed. Make sure you provided corret login and password"),
+    LOGIN_MISS_PATTERN("Login doesn't match pattern"),
+    EMAIL_MISS_PATTERN("Email is not up to RFC 5322 standards");
 
 
     private String errorMessage;
