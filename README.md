@@ -1,4 +1,4 @@
-##Opis wykonanego zadania:
+## Opis wykonanego zadania:
 Do przechowania danych wykorzystałem bazę danych H2 (in-memory). Dane zostały zaincjalizowane w klasie SetupDataLoader 
 Został zaimplementowany Spring Security aby dostęp do odpowiednich endpointów miał tylko autoryzowany użytkownik.
 Logowanie pozwala nam na uwierzytelnienie użytkwonika, natomiast Role pozwalają nam na dostęp na określone endpointy. 
@@ -18,7 +18,7 @@ tak aby po wygaśnięciu access_tokena można było wysłać requesta na odpowie
    c. Uruchomienie przy pomocy komendy `java -jar .\Intern-task-1.0.0-RELEASE.jar`  
 3. Sposób III (wymagane środowisko Docker, rekomendowany sposób jeśli w poprzednich pojawią się błędy):  
    a. Link do zadania na dockerhub: `https://hub.docker.com/repository/docker/ajres/intern-task`  
-   b. Lub po prostu wpisanie komendy w konsoli: `docker run --rm --name intern-task -p 8080:8080 ajres/intern-task:v1.0.0`
+   b. Lub po prostu wpisanie komendy w konsoli: `docker run --rm --name intern-task -p 8080:8080 ajres/intern-task:v1.0.0`  
    c. Dostęp do pliku powiadomienia.txt przy użyciu komendy `docker exec -it intern-task cat powiadomienia.txt` **UWAGA**! Kontener musi być uruchomiony, najlepiej użyć drugiej konsoli
 
 ### **_Adresy url_**
