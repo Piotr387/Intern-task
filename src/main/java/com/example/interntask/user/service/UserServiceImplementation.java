@@ -105,7 +105,9 @@ public class UserServiceImplementation implements UserService, UserDetailsServic
                 throw new RuntimeException(ErrorMessages.LOGIN_ALREADY_TAKEN.getErrorMessage());
             throw new RuntimeException(ErrorMessages.ACCOUNT_ALREADY_REGISTER.getErrorMessage());
         });
-
+        userRepository.findByEmail(lectureSignUpDTO.getUserDTO().getEmail()).ifPresent( user ->{
+            throw new RuntimeException(ErrorMessages.EMAIL_ALREADY_TAKEN.getErrorMessage());
+        });
         UserEntity userEntity = createUser(lectureSignUpDTO.getUserDTO());
         addRoleToUser(userEntity, "ROLE_USER");
         return signUpForLecture(userEntity, lectureSignUpDTO.getLectureName());

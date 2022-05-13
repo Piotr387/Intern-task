@@ -6,6 +6,7 @@ public enum ErrorMessages {
     NO_USER_FOUND_WITH_PROVIDED_LOGIN("No user found with provided login"),
     NO_ROLE_FOUND_WITH_PROVIDED_NAME("No role found with provided name"),
     LOGIN_ALREADY_TAKEN("Podany login jest już zajęty"),
+    EMAIL_ALREADY_TAKEN("Podany email jest już zajęty"),
     ACCOUNT_ALREADY_REGISTER("Znaleziono konto o takich danych. Zapisz się na prelekcje z poziomu konta"),
     USER_TAKEN_AT_THIS_HOUR("User already sign in on lecture at this time"),
     NO_FREE_SEATS_AT_LECTURE("No free seats in the lecture"),
