@@ -4,6 +4,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.example.interntask.responde.ErrorMessages;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Component;
 
@@ -13,6 +14,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.util.*;
+import java.util.regex.Pattern;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
@@ -22,6 +24,22 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 public class UtilitiesImpl implements Utilities {
     private final Random random = new SecureRandom();
     private final String ALPHABET = "0123456789ABCDEFGHIJKLMNOPQRSTUWXYZabcdefghijklmnopqrstuwxyz";
+    //RFC 5322 standard
+    private final String emailRegexPattern = "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$";
+    /**
+     * Username pattern:
+     * Length >=3
+     * Valid characters: a-z, A-Z, 0-9, points, dashes and underscores.
+     */
+    private final String usernameRegexPattern = "^[a-zA-Z0-9._-]{3,}$";
+
+    public String getEmailRegexPattern() {
+        return emailRegexPattern;
+    }
+
+    public String getUsernameRegexPattern() {
+        return usernameRegexPattern;
+    }
 
     /**
      * Function that will generate password for each user that will register, this password will be send via
@@ -43,7 +61,7 @@ public class UtilitiesImpl implements Utilities {
             String token = authorizationHeader.substring("Bearer ".length());
             return getUserLoginFromToken(token);
         }
-        throw new RuntimeException("No token provided");
+        throw new RuntimeException(ErrorMessages.NO_TOKEN_PROVIDED.getErrorMessage());
     }
 
     @Override
@@ -99,6 +117,13 @@ public class UtilitiesImpl implements Utilities {
         error.put("error_message", e.getMessage());
         response.setContentType(APPLICATION_JSON_VALUE);
         new ObjectMapper().writeValue(response.getOutputStream(), error);
+    }
+
+    @Override
+    public boolean patternMatches(String str, String regexPattern) {
+        return Pattern.compile(regexPattern)
+                .matcher(str)
+                .matches();
     }
 
 }

@@ -1,5 +1,7 @@
 package com.example.interntask.file;
 
+import com.example.interntask.responde.ErrorMessages;
+
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -13,7 +15,7 @@ public class FileAssistantTxt implements FileAssistant {
              BufferedWriter bufferedWriter = new BufferedWriter(fileWriter)){
             bufferedWriter.append(message);
         } catch (IOException e) {
-            throw new RuntimeException("There was an error wrting to file");
+            throw new RuntimeException(ErrorMessages.ERROR_WRITING_FILE.getErrorMessage());
         }
     }
 }

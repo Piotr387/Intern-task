@@ -1,5 +1,6 @@
 package com.example.interntask.lecture.service;
 
+import com.example.interntask.lecture.LectureEntity;
 import com.example.interntask.lecture.dto.LectureDTO;
 import com.example.interntask.lecture.dto.LectureStatisticsDAO;
 import com.example.interntask.lecture.dto.LectureThematicStatisticDAO;
@@ -37,4 +38,6 @@ public interface LectureService {
      * more info in LectureThematicStatisticDAO class
      */
     List<LectureThematicStatisticDAO> getLecturesByThematicPathPopularity();
+
+    LectureEntity findByName(String lectureName);
 }

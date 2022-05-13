@@ -16,6 +16,7 @@ public interface Utilities {
 
     String generatePassword();
 
+    //Algorith used over whole project to create/read tokens
     Algorithm createAlgorithm();
 
     String createRefreshToken(String login, String requestURL);
@@ -24,5 +25,12 @@ public interface Utilities {
 
     Map<String, String> createMapOfTokens(String access_token, String refresh_token);
 
+    /**
+     * This method is to avoid duplication in code, it was used in two places
+     * @param e throwns exception while creating token
+     * @param response
+     */
     void tokenCreatingException(Exception e, HttpServletResponse response) throws IOException;
+
+    boolean patternMatches(String str, String regexPattern);
 }

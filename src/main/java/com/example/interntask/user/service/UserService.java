@@ -2,6 +2,7 @@ package com.example.interntask.user.service;
 
 import com.example.interntask.lecture.dto.LectureDTO;
 import com.example.interntask.lecture.dto.LectureSignUpDTO;
+import com.example.interntask.responde.OperationStatusModel;
 import com.example.interntask.user.UserDTO;
 import com.example.interntask.user.UserEntity;
 
@@ -21,17 +22,18 @@ import java.util.List;
 public interface UserService {
     List<UserDTO> getUsers();
     UserEntity createUser(UserDTO userDTO);
-    UserEntity createUserWithpassword(UserDTO userDTO, String password);
+    UserEntity createUserWithPassword(UserDTO userDTO, String password);
 
-    String signUp(LectureSignUpDTO lectureSignUpDTO);
+    OperationStatusModel signUp(LectureSignUpDTO lectureSignUpDTO);
 
-    String signUpRegister(HttpServletRequest request);
+    OperationStatusModel signUpRegister(HttpServletRequest request);
 
-    String signUpForLecture(UserEntity userEntity, String lectureName);
+    OperationStatusModel signUpForLecture(UserEntity userEntity, String lectureName);
 
-    void cancelReservation(HttpServletRequest request);
+    OperationStatusModel cancelReservation(HttpServletRequest request);
 
     void updateEmail(HttpServletRequest request);
+
     void addRoleToUser(UserEntity userEntity, String roleName);
 
     UserEntity getUser(String login);

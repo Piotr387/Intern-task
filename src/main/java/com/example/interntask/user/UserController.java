@@ -5,6 +5,8 @@ import com.example.interntask.lecture.dto.LectureSignUpDTO;
 import com.example.interntask.lecture.dto.LectureStatisticsDAO;
 import com.example.interntask.lecture.dto.LectureThematicStatisticDAO;
 import com.example.interntask.lecture.service.LectureService;
+import com.example.interntask.responde.OperationStatusModel;
+import com.example.interntask.responde.RequestOperationName;
 import com.example.interntask.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -72,7 +74,7 @@ public class UserController {
      * @return "SUCCES" or throw exception
      */
     @PostMapping(path = "/sign-up")
-    public String signUpUserForLecture(@RequestBody LectureSignUpDTO lectureSignUpDTO) {
+    public OperationStatusModel signUpUserForLecture(@RequestBody LectureSignUpDTO lectureSignUpDTO) {
         return userService.signUp(lectureSignUpDTO);
     }
 
@@ -83,7 +85,7 @@ public class UserController {
      * @return "SUCCESS" or throw exception
      */
     @PostMapping(path = "/sign-up-register")
-    public String signUpRegisterUserForLecture(HttpServletRequest request) {
+    public OperationStatusModel signUpRegisterUserForLecture(HttpServletRequest request) {
         return userService.signUpRegister(request);
     }
 
@@ -94,9 +96,9 @@ public class UserController {
      * @return "SUCCESS" or throw exception
      */
     @DeleteMapping(path = "/cancel")
-    public String cancelReservation(HttpServletRequest request) {
-        userService.cancelReservation(request);
-        return "SUCCESS";
+    public OperationStatusModel cancelReservation(HttpServletRequest request) {
+        return userService.cancelReservation(request);
+        //return new OperationStatusModel.Builder(RequestOperationName.CANCEL_RESERVATION.name()).build();
     }
 
     /**
@@ -106,9 +108,9 @@ public class UserController {
      * @return "SUCCESS" or throw exception
      */
     @PutMapping(path = "/update-email")
-    public String updateEmail(HttpServletRequest request) {
+    public OperationStatusModel updateEmail(HttpServletRequest request) {
         userService.updateEmail(request);
-        return "SUCCESS";
+        return new OperationStatusModel.Builder(RequestOperationName.CHANGE_EMAIL.name()).build();
     }
 
     /**

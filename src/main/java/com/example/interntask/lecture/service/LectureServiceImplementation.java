@@ -5,15 +5,15 @@ import com.example.interntask.lecture.dto.LectureStatisticsDAO;
 import com.example.interntask.lecture.dto.LectureThematicStatisticDAO;
 import com.example.interntask.lecture.LectureEntity;
 import com.example.interntask.role.RoleEntity;
-import com.example.interntask.role.RoleRepository;
+import com.example.interntask.role.RoleService;
 import com.example.interntask.user.UserEntity;
 import com.example.interntask.lecture.LectureRepository;
 import com.example.interntask.user.UserRepository;
+import com.example.interntask.responde.ErrorMessages;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -29,7 +29,7 @@ public class LectureServiceImplementation implements LectureService {
     UserRepository userRepository;
 
     @Autowired
-    RoleRepository roleRepository;
+    RoleService roleService;
 
     @Override
     public List<LectureDTO> getLectures() {
@@ -39,9 +39,16 @@ public class LectureServiceImplementation implements LectureService {
     }
 
     @Override
+    public LectureEntity findByName(String name) {
+        return lectureRepository.findByName(name).orElseThrow(()-> {
+            throw new RuntimeException(ErrorMessages.LECTURE_NOT_FOUND_BY_NAME.getErrorMessage());
+        });
+    }
+
+    @Override
     public List<LectureDTO> getLecturesByUserLogin(String login) {
         UserEntity userEntity = userRepository.findByLogin(login).orElseThrow( () -> {
-            throw new RuntimeException("Record with provided login is not found");
+            throw new RuntimeException(ErrorMessages.NO_USER_FOUND_WITH_PROVIDED_LOGIN.getErrorMessage());
         });
 
         List<LectureDTO> lectureDTOList = userEntity.getLectureEntityList().stream()
@@ -53,9 +60,7 @@ public class LectureServiceImplementation implements LectureService {
     @Override
     public List<LectureStatisticsDAO> getLecturesByPopularity() {
 
-        RoleEntity roleEntity = roleRepository.findByName("ROLE_USER").orElseThrow( () -> {
-            throw new RuntimeException("No such a role with provided name");
-        });
+        RoleEntity roleEntity = roleService.findByName("ROLE_USER");
 
         long listCount = userRepository.findAll().stream()
                 .filter( user -> user.getRoles().contains(roleEntity))

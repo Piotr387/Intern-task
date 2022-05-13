@@ -1,12 +1,15 @@
 package com.example.interntask.user.service;
 
 import com.example.interntask.email.EmailService;
-import com.example.interntask.lecture.LectureRepository;
+import com.example.interntask.lecture.LectureEntity;
 import com.example.interntask.lecture.dto.LectureDTO;
 import com.example.interntask.lecture.dto.LectureSignUpDTO;
 import com.example.interntask.lecture.service.LectureService;
+import com.example.interntask.responde.ErrorMessages;
+import com.example.interntask.responde.OperationStatusModel;
+import com.example.interntask.responde.RequestOperationName;
 import com.example.interntask.role.RoleEntity;
-import com.example.interntask.role.RoleRepository;
+import com.example.interntask.role.RoleService;
 import com.example.interntask.user.UserDTO;
 import com.example.interntask.user.UserEntity;
 import com.example.interntask.user.UserRepository;
@@ -26,8 +29,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 import java.io.IOException;
-import java.util.*;
-import java.util.concurrent.atomic.AtomicReference;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
@@ -43,16 +46,13 @@ public class UserServiceImplementation implements UserService, UserDetailsServic
     Utilities utilities;
 
     @Autowired
-    LectureRepository lectureRepository;
-
-    @Autowired
     UserRepository userRepository;
 
     @Autowired
     EmailService emailService;
 
     @Autowired
-    RoleRepository roleRepository;
+    RoleService roleService;
 
     @Autowired
     LectureService lectureService;
@@ -60,7 +60,7 @@ public class UserServiceImplementation implements UserService, UserDetailsServic
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         UserEntity userEntity = userRepository.findByLogin(username).orElseThrow(() -> {
-            throw new RuntimeException("No user name with provided login");
+            throw new RuntimeException(ErrorMessages.NO_USER_FOUND_WITH_PROVIDED_LOGIN.getErrorMessage());
         });
         List<SimpleGrantedAuthority> authorities = new ArrayList<>();
         userEntity.getRoles().forEach(
@@ -79,12 +79,12 @@ public class UserServiceImplementation implements UserService, UserDetailsServic
     @Override
     @Transactional(rollbackOn = Exception.class)
     public UserEntity createUser(UserDTO userDTO) {
-        return createUserWithpassword(userDTO, utilities.generatePassword());
+        return createUserWithPassword(userDTO, utilities.generatePassword());
     }
 
     @Override
     @Transactional(rollbackOn = Exception.class)
-    public UserEntity createUserWithpassword(UserDTO userDTO, String password) {
+    public UserEntity createUserWithPassword(UserDTO userDTO, String password) {
         UserEntity userEntity = new ModelMapper().map(userDTO, UserEntity.class);
         userEntity.setEncryptedPassword(passwordEncoder.encode(password));
         userRepository.save(userEntity);
@@ -94,75 +94,64 @@ public class UserServiceImplementation implements UserService, UserDetailsServic
 
     @Override
     @Transactional(rollbackOn = Exception.class)
-    public String signUp(LectureSignUpDTO lectureSignUpDTO) {
-        AtomicReference<String> returnValue = new AtomicReference<>("ERROR");
-        userRepository.findByLogin(lectureSignUpDTO.getUserDTO().getLogin()).ifPresentOrElse(
-                //If user will be find, check if email matches if no throw expection,
-                // if yes ten give user information to sign up to lecture from user account
-                userEntity -> {
-                    if (!userEntity.getEmail().equals(lectureSignUpDTO.getUserDTO().getEmail()))
-                        throw new RuntimeException("Podany login jest już zajęty");
+    public OperationStatusModel signUp(LectureSignUpDTO lectureSignUpDTO) {
+        userRepository.findByLogin(lectureSignUpDTO.getUserDTO().getLogin()).ifPresent( user -> {
+            if (!user.getEmail().equals(lectureSignUpDTO.getUserDTO().getEmail()))
+                throw new RuntimeException(ErrorMessages.LOGIN_ALREADY_TAKEN.getErrorMessage());
+            throw new RuntimeException(ErrorMessages.ACCOUNT_ALREADY_REGISTER.getErrorMessage());
+        });
 
-                    throw new RuntimeException("Znaleziono konto o takich danych. Zapisz się na prelekcje z poziomu konta");
-                },
-                //if user don't exists, it will check if email address is free and create user,
-                // otherwise throw exception
-                () -> {
-                    UserEntity user = createUser(lectureSignUpDTO.getUserDTO());
-                    addRoleToUser(user, "ROLE_USER");
-                    returnValue.set(signUpForLecture(user, lectureSignUpDTO.getLectureName()));
-                }
-        );
-        return String.valueOf(returnValue);
+        UserEntity userEntity = createUser(lectureSignUpDTO.getUserDTO());
+        addRoleToUser(userEntity, "ROLE_USER");
+        return signUpForLecture(userEntity, lectureSignUpDTO.getLectureName());
     }
 
     @Override
-    public String signUpRegister(HttpServletRequest request) {
+    public OperationStatusModel signUpRegister(HttpServletRequest request) {
         String login = utilities.getUserLoginFromRequest(request);
         UserEntity userEntity = userRepository.findByLogin(login).orElseThrow(() -> {
-            throw new RuntimeException("No user with provided login");
+            throw new RuntimeException(ErrorMessages.NO_USER_FOUND_WITH_PROVIDED_LOGIN.getErrorMessage());
         });
         return signUpForLecture(userEntity, request.getParameter("lectureName"));
     }
 
     @Override
     @Transactional(rollbackOn = Exception.class)
-    public String signUpForLecture(UserEntity userEntity, String lectureName) {
-        AtomicReference<String> returnValue = new AtomicReference<>("ERROR");
-        lectureRepository.findByName(lectureName).ifPresentOrElse(
-                lectureEntity -> {
-                    boolean isUserBusy = userEntity.getLectureEntityList().stream()
-                            .anyMatch(lecture -> lectureEntity.getStartTime().equals(lecture.getStartTime()));
-                    if (isUserBusy)
-                        throw new RuntimeException("User already sign in on lecture at this time");
+    public OperationStatusModel signUpForLecture(UserEntity userEntity, String lectureName) {
 
-                    if (lectureEntity.getUserEntityList().size() < lectureEntity.getCAPACITY()) {
-                        userEntity.getLectureEntityList().add(lectureEntity);
-                        userRepository.save(userEntity);
-                        emailService.sendEmail(userEntity, lectureEntity);
-                        returnValue.set("SUCCES");
-                    } else {
-                        throw new RuntimeException("Brak wolnych miejsc w wybranym wydarzeniu");
-                    }
-                },
-                () -> {
-                    throw new RuntimeException("Nie znaleziono prelekcji o podanej nazwie");
-                }
-        );
-        return String.valueOf(returnValue);
+        LectureEntity lectureEntity = lectureService.findByName(lectureName);
+
+        boolean isUserBusy = userEntity.getLectureEntityList().stream()
+                .anyMatch(lecture -> lectureEntity.getStartTime().equals(lecture.getStartTime()));
+
+        if (isUserBusy)
+            throw new RuntimeException(ErrorMessages.USER_TAKEN_AT_THIS_HOUR.getErrorMessage());
+
+        if (lectureEntity.getUserEntityList().size() >= lectureEntity.getCAPACITY())
+            throw new RuntimeException(ErrorMessages.NO_FREE_SEATS_AT_LECTURE.getErrorMessage());
+
+        userEntity.getLectureEntityList().add(lectureEntity);
+        userRepository.save(userEntity);
+        emailService.sendEmail(userEntity, lectureEntity);
+
+        return new OperationStatusModel.Builder(RequestOperationName.SIGN_UP_FOR_LECTURE.name()).build();
     }
 
     @Override
-    public void cancelReservation(HttpServletRequest request) {
+    public OperationStatusModel cancelReservation(HttpServletRequest request) {
         String login = utilities.getUserLoginFromRequest(request);
         UserEntity userEntity = userRepository.findByLogin(login).orElseThrow(() -> {
-            throw new RuntimeException("No user found with provided id");
+            throw new RuntimeException(ErrorMessages.NO_USER_FOUND_WITH_PROVIDED_LOGIN.getErrorMessage());
         });
 
-        userEntity.getLectureEntityList().removeIf(lectureEntity ->
+        boolean isDelete = userEntity.getLectureEntityList().removeIf(lectureEntity ->
                 request.getParameter("lectureName").equals(lectureEntity.getName()));
+        if (!isDelete)
+            return new OperationStatusModel.Builder(RequestOperationName.CANCEL_RESERVATION.name())
+                    .operationResult(ErrorMessages.DELETE_ERROR.getErrorMessage()).build();
 
         userRepository.save(userEntity);
+        return new OperationStatusModel.Builder(RequestOperationName.CANCEL_RESERVATION.name()).build();
     }
 
     @Override
@@ -171,29 +160,26 @@ public class UserServiceImplementation implements UserService, UserDetailsServic
         userRepository.findByLogin(login).ifPresentOrElse(
                 user -> {
                     if (user.getEmail().equals(request.getParameter("newEmail")))
-                        throw new RuntimeException("Provided new email is same as previous one");
+                        throw new RuntimeException(ErrorMessages.EMAIL_ERROR_SAME_AS_PREVIOUS.getErrorMessage());
                     user.setEmail(request.getParameter("newEmail"));
                     userRepository.save(user);
                 },
                 () -> {
-                    throw new RuntimeException("No user found with provided id");
+                    throw new RuntimeException(ErrorMessages.NO_USER_FOUND_WITH_PROVIDED_LOGIN.getErrorMessage());
                 }
         );
     }
 
     @Override
     public void addRoleToUser(UserEntity userEntity, String roleName) {
-        RoleEntity roleEntity = roleRepository.findByName(roleName).orElseThrow(() -> {
-            throw new RuntimeException("No role found with provided name");
-        });
-        userEntity.getRoles().add(roleEntity);
+        userEntity.getRoles().add(roleService.findByName(roleName));
         userRepository.save(userEntity);
     }
 
     @Override
     public UserEntity getUser(String login) {
         return userRepository.findByLogin(login).orElseThrow(() -> {
-            throw new RuntimeException("No such a user with provided login");
+            throw new RuntimeException(ErrorMessages.NO_USER_FOUND_WITH_PROVIDED_LOGIN.getErrorMessage());
         });
     }
 
@@ -220,7 +206,7 @@ public class UserServiceImplementation implements UserService, UserDetailsServic
                 utilities.tokenCreatingException(e, response);
             }
         } else {
-            throw new RuntimeException("Refresh token is missing");
+            throw new RuntimeException(ErrorMessages.REFRESH_TOKEN_MISSING.getErrorMessage());
         }
     }
 
@@ -234,7 +220,7 @@ public class UserServiceImplementation implements UserService, UserDetailsServic
     public UserDTO getUserAccountDetails(HttpServletRequest request) {
         String login = utilities.getUserLoginFromRequest(request);
         UserEntity userEntity = userRepository.findByLogin(login).orElseThrow(() -> {
-            throw new RuntimeException("No such a user with provided login");
+            throw new RuntimeException(ErrorMessages.NO_USER_FOUND_WITH_PROVIDED_LOGIN.getErrorMessage());
         });
         return new ModelMapper().map(userEntity, UserDTO.class);
     }
