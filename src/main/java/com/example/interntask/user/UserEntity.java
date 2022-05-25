@@ -35,6 +35,7 @@ public class UserEntity implements Serializable {
             joinColumns = { @JoinColumn(name = "user_id") },
             inverseJoinColumns = { @JoinColumn(name = "lecture_id") }
     )
+
     private List<LectureEntity> lectureEntityList = new ArrayList<>(3);
 
     @ManyToMany(fetch = FetchType.EAGER)

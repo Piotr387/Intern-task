@@ -8,6 +8,8 @@ import java.util.Date;
 
 public class EmailMessage {
 
+    private EmailMessage() {
+    }
 
     /**
      * Method to create message that going to be send to user after sign in to lecture

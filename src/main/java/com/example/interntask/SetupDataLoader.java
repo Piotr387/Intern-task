@@ -8,7 +8,7 @@ import com.example.interntask.user.UserDTO;
 import com.example.interntask.user.UserEntity;
 import com.example.interntask.user.UserRepository;
 import com.example.interntask.user.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
@@ -20,21 +20,18 @@ import java.util.Arrays;
 import java.util.List;
 
 @Component
+@AllArgsConstructor
 public class SetupDataLoader implements ApplicationListener<ContextRefreshedEvent> {
 
     boolean alreadySetup = false;
 
-    @Autowired
-    UserService userService;
+    private final UserService userService;
 
-    @Autowired
-    LectureRepository lectureRepository;
+    private final LectureRepository lectureRepository;
 
-    @Autowired
-    UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    @Autowired
-    RoleService roleService;
+    private final RoleService roleService;
 
     @Override
     @Transactional
@@ -46,19 +43,23 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         roleService.createRoleIfNotFound("ROLE_ORGANIZER");
         roleService.createRoleIfNotFound("ROLE_USER");
 
+        String thematicPathFrontend = "Frontend";
+        String thematicPathBackend = "Backend";
+        String thematicPathArchitect = "Architect";
+
         /*
           Initial data, list of users and list of lectures
          */
         List<LectureEntity> lectureEntityList = new ArrayList<>(Arrays.asList(
-                new LectureEntity("Lecture 1 at 10:00", "Frontend", LocalTime.of(10, 0)),
-                new LectureEntity("Lecture 2 at 10:00", "Backend", LocalTime.of(10, 0)),
-                new LectureEntity("Lecture 3 at 10:00", "Architect", LocalTime.of(10, 0)),
-                new LectureEntity("Lecture 1 at 12:00", "Frontend", LocalTime.of(12, 0)),
-                new LectureEntity("Lecture 2 at 12:00", "Backend", LocalTime.of(12, 0)),
-                new LectureEntity("Lecture 3 at 12:00", "Architect", LocalTime.of(12, 0)),
-                new LectureEntity("Lecture 1 at 14:00", "Frontend", LocalTime.of(14, 0)),
-                new LectureEntity("Lecture 2 at 14:00", "Backend", LocalTime.of(14, 0)),
-                new LectureEntity("Lecture 3 at 14:00", "Architect", LocalTime.of(14, 0))
+                new LectureEntity("Lecture 1 at 10:00", thematicPathFrontend, LocalTime.of(10, 0)),
+                new LectureEntity("Lecture 2 at 10:00", thematicPathBackend, LocalTime.of(10, 0)),
+                new LectureEntity("Lecture 3 at 10:00", thematicPathArchitect, LocalTime.of(10, 0)),
+                new LectureEntity("Lecture 1 at 12:00", thematicPathFrontend, LocalTime.of(12, 0)),
+                new LectureEntity("Lecture 2 at 12:00", thematicPathBackend, LocalTime.of(12, 0)),
+                new LectureEntity("Lecture 3 at 12:00", thematicPathArchitect, LocalTime.of(12, 0)),
+                new LectureEntity("Lecture 1 at 14:00", thematicPathFrontend, LocalTime.of(14, 0)),
+                new LectureEntity("Lecture 2 at 14:00", thematicPathBackend, LocalTime.of(14, 0)),
+                new LectureEntity("Lecture 3 at 14:00", thematicPathArchitect, LocalTime.of(14, 0))
         ));
         lectureRepository.saveAll(lectureEntityList);
 
@@ -83,14 +84,9 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
                 new LectureSignUpDTO("Lecture 2 at 14:00", new UserDTO("username8","mail8@mail.com"))
         ));
         userList.forEach(
-                user -> {
-                    userRepository.findByLogin(user.getUserDTO().getLogin()).ifPresentOrElse(
-                            userEntity -> {
-                                userService.signUpForLecture(userEntity, user.getLectureName());
-                            },
-                            () -> userService.signUp(user)
-                    );
-                }
+                user -> userRepository.findByLogin(user.getUserDTO().getLogin()).ifPresentOrElse(
+                            userEntity -> userService.signUpForLecture(userEntity, user.getLectureName()),
+                            () -> userService.signUp(user))
         );
 
         /**

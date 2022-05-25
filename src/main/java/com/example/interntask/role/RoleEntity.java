@@ -3,10 +3,14 @@ package com.example.interntask.role;
 import com.example.interntask.user.UserEntity;
 
 import javax.persistence.*;
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.List;
 
 @Entity
-public class RoleEntity {
+public class RoleEntity implements Serializable {
+    @Serial
+    private static final long serialVersionUID = -1209289997505536602L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

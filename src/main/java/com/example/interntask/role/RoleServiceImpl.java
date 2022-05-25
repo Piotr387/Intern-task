@@ -1,20 +1,21 @@
 package com.example.interntask.role;
 
 import com.example.interntask.responde.ErrorMessages;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.interntask.responde.UserServiceException;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@AllArgsConstructor
 public class RoleServiceImpl implements RoleService {
 
-    @Autowired
-    RoleRepository roleRepository;
+    private final RoleRepository roleRepository;
 
     @Override
     public RoleEntity findByName(String roleName) {
         return roleRepository.findByName(roleName).orElseThrow(() -> {
-            throw new RuntimeException(ErrorMessages.NO_ROLE_FOUND_WITH_PROVIDED_NAME.getErrorMessage());
+            throw new UserServiceException(ErrorMessages.NO_ROLE_FOUND_WITH_PROVIDED_NAME.getErrorMessage());
         });
     }
 

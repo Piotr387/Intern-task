@@ -3,7 +3,6 @@ package com.example.interntask.security;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -24,6 +23,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final UserDetailsService userDetailsService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
+    private static final String USER_ROLE = "ROLE_USER";
+    private static final String ORGANIZER_ROLE = "ROLE_ORGANIZER";
+
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder);
@@ -41,13 +43,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 "/lectures",
                 "/users/sign-up/**"
         ).permitAll(); //Unauthorized access, no need access_token
-        http.authorizeRequests().antMatchers(GET, "/users/lectures").hasAnyAuthority("ROLE_USER");
-        http.authorizeRequests().antMatchers(POST, "/users/sign-up-register").hasAnyAuthority("ROLE_USER");
-        http.authorizeRequests().antMatchers(DELETE, "/users/cancel").hasAnyAuthority("ROLE_USER");
-        http.authorizeRequests().antMatchers(PUT, "/users/update-email").hasAnyAuthority("ROLE_USER");
+        http.authorizeRequests().antMatchers(GET, "/users/lectures").hasAnyAuthority(USER_ROLE);
+        http.authorizeRequests().antMatchers(POST, "/users/sign-up-register").hasAnyAuthority(USER_ROLE);
+        http.authorizeRequests().antMatchers(DELETE, "/users/cancel").hasAnyAuthority(USER_ROLE);
+        http.authorizeRequests().antMatchers(PUT, "/users/update-email").hasAnyAuthority(USER_ROLE);
         http.authorizeRequests().antMatchers(GET, "/users/statistics/lectures-popularity",
                         "/users/statistics/thematic-path-popularity")
-                .hasAnyAuthority("ROLE_ORGANIZER");
+                .hasAnyAuthority(ORGANIZER_ROLE);
         http.authorizeRequests().anyRequest().authenticated();
         http.addFilter(customAuthenticationFilter);
         http.addFilterBefore(new CustomAuthorizationFilter(getApplicationContext()), UsernamePasswordAuthenticationFilter.class);

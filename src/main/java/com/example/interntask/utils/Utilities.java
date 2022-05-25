@@ -23,7 +23,7 @@ public interface Utilities {
 
     String createAccessToken(String username, String toString, List<String> collect);
 
-    Map<String, String> createMapOfTokens(String access_token, String refresh_token);
+    Map<String, String> createMapOfTokens(String accessToken, String refreshToken);
 
     /**
      * This method is to avoid duplication in code, it was used in two places

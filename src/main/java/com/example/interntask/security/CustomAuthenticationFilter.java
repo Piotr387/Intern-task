@@ -2,7 +2,6 @@ package com.example.interntask.security;
 
 import com.example.interntask.utils.Utilities;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -11,14 +10,11 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.stereotype.Controller;
 
 import javax.servlet.FilterChain;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.stream.Collectors;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -47,13 +43,13 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws IOException {
         User user = (User) authentication.getPrincipal();
 
-        String access_token = utilities.createAccessToken(user.getUsername(),
+        String accessToken = utilities.createAccessToken(user.getUsername(),
                 request.getRequestURL().toString(),
-                user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()));
+                user.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList());
 
-        String refresh_token = utilities.createRefreshToken(user.getUsername(), request.getRequestURL().toString());
+        String refreshToken = utilities.createRefreshToken(user.getUsername(), request.getRequestURL().toString());
 
         response.setContentType(APPLICATION_JSON_VALUE);
-        new ObjectMapper().writeValue(response.getOutputStream(), utilities.createMapOfTokens(access_token,refresh_token));
+        new ObjectMapper().writeValue(response.getOutputStream(), utilities.createMapOfTokens(accessToken,refreshToken));
     }
 }

@@ -5,6 +5,7 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.example.interntask.responde.ErrorMessages;
+import com.example.interntask.responde.UserServiceException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Component;
 
@@ -22,23 +23,23 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @Component
 public class UtilitiesImpl implements Utilities {
-    private final Random random = new SecureRandom();
-    private final String ALPHABET = "0123456789ABCDEFGHIJKLMNOPQRSTUWXYZabcdefghijklmnopqrstuwxyz";
+    private static final Random random = new SecureRandom();
+    private static final String ALPHABET = "0123456789ABCDEFGHIJKLMNOPQRSTUWXYZabcdefghijklmnopqrstuwxyz";
     //RFC 5322 standard
-    private final String emailRegexPattern = "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$";
+    private static final String EMAIL_REGEX_PATTERN = "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$";
     /**
      * Username pattern:
      * Length >=3
      * Valid characters: a-z, A-Z, 0-9, points, dashes and underscores.
      */
-    private final String usernameRegexPattern = "^[a-zA-Z0-9._-]{3,}$";
+    private static final String USERNAME_REGEX_PATTERN = "^[a-zA-Z0-9._-]{3,}$";
 
-    public String getEmailRegexPattern() {
-        return emailRegexPattern;
+    public String getEmailRegexPattern(){
+        return EMAIL_REGEX_PATTERN;
     }
 
     public String getUsernameRegexPattern() {
-        return usernameRegexPattern;
+        return USERNAME_REGEX_PATTERN;
     }
 
     /**
@@ -61,7 +62,7 @@ public class UtilitiesImpl implements Utilities {
             String token = authorizationHeader.substring("Bearer ".length());
             return getUserLoginFromToken(token);
         }
-        throw new RuntimeException(ErrorMessages.NO_TOKEN_PROVIDED.getErrorMessage());
+        throw new UserServiceException(ErrorMessages.NO_TOKEN_PROVIDED.getErrorMessage());
     }
 
     @Override
@@ -102,10 +103,10 @@ public class UtilitiesImpl implements Utilities {
     }
 
     @Override
-    public Map<String, String> createMapOfTokens(String access_token, String refresh_token) {
+    public Map<String, String> createMapOfTokens(String accessToken, String refreshToken) {
         Map<String, String> tokens = new HashMap<>();
-        tokens.put("access_token", access_token);
-        tokens.put("refresh_token", refresh_token);
+        tokens.put("access_token", accessToken);
+        tokens.put("refresh_token", refreshToken);
         return tokens;
     }
 

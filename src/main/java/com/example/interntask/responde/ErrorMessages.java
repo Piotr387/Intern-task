@@ -16,7 +16,8 @@ public enum ErrorMessages {
     DELETE_ERROR("No lecture name found in user's repository. Make sure you provided good lecture name."),
     AUTHENTICATION_FAIL("Authentication Failed. Make sure you provided corret login and password"),
     LOGIN_MISS_PATTERN("Login doesn't match pattern"),
-    EMAIL_MISS_PATTERN("Email is not up to RFC 5322 standards");
+    EMAIL_MISS_PATTERN("Email is not up to RFC 5322 standards"),
+    SOMETHING_WENT_WRONG("During saving to lecture something went wrong");
 
 
     private String errorMessage;

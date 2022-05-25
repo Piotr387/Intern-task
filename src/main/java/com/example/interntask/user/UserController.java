@@ -8,7 +8,9 @@ import com.example.interntask.lecture.service.LectureService;
 import com.example.interntask.responde.OperationStatusModel;
 import com.example.interntask.responde.RequestOperationName;
 import com.example.interntask.user.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -18,14 +20,11 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/users")
+@AllArgsConstructor
 public class UserController {
 
-    @Autowired
-    LectureService lectureService;
-
-    @Autowired
-    UserService userService;
-
+    private final LectureService lectureService;
+    private final UserService userService;
 
     /**
      * Endpoint for method GET http://localhost:8080/users/token/refresh
@@ -42,8 +41,8 @@ public class UserController {
      * @return list of all users stored in database
      */
     @GetMapping()
-    public List<UserDTO> getUsers() {
-        return userService.getUsers();
+    public ResponseEntity<List<UserDTO>> getUsers() {
+        return new ResponseEntity<>(userService.getUsers(), HttpStatus.OK);
     }
 
     /**
@@ -52,8 +51,8 @@ public class UserController {
      */
     @GetMapping(path = "/lectures")
     @ResponseBody
-    public List<LectureDTO> getUsersLectures(HttpServletRequest request) {
-        return userService.getUserLecture(request);
+    public ResponseEntity<List<LectureDTO>> getUsersLectures(HttpServletRequest request) {
+        return new ResponseEntity<>( userService.getUserLecture(request), HttpStatus.OK);
     }
 
     /**
@@ -62,8 +61,8 @@ public class UserController {
      */
     @GetMapping(path = "/account")
     @ResponseBody
-    public UserDTO getUserDetails(HttpServletRequest request) {
-        return userService.getUserAccountDetails(request);
+    public ResponseEntity<UserDTO> getUserDetails(HttpServletRequest request) {
+        return new ResponseEntity<>(userService.getUserAccountDetails(request), HttpStatus.OK);
     }
 
     /**
@@ -74,8 +73,8 @@ public class UserController {
      * @return "SUCCES" or throw exception
      */
     @PostMapping(path = "/sign-up")
-    public OperationStatusModel signUpUserForLecture(@RequestBody LectureSignUpDTO lectureSignUpDTO) {
-        return userService.signUp(lectureSignUpDTO);
+    public ResponseEntity<OperationStatusModel> signUpUserForLecture(@RequestBody LectureSignUpDTO lectureSignUpDTO) {
+        return new ResponseEntity<>(userService.signUp(lectureSignUpDTO), HttpStatus.OK);
     }
 
     /**
@@ -85,8 +84,8 @@ public class UserController {
      * @return "SUCCESS" or throw exception
      */
     @PostMapping(path = "/sign-up-register")
-    public OperationStatusModel signUpRegisterUserForLecture(HttpServletRequest request) {
-        return userService.signUpRegister(request);
+    public ResponseEntity<OperationStatusModel> signUpRegisterUserForLecture(HttpServletRequest request) {
+        return new ResponseEntity<>(userService.signUpRegister(request), HttpStatus.OK);
     }
 
     /**
@@ -96,9 +95,8 @@ public class UserController {
      * @return "SUCCESS" or throw exception
      */
     @DeleteMapping(path = "/cancel")
-    public OperationStatusModel cancelReservation(HttpServletRequest request) {
-        return userService.cancelReservation(request);
-        //return new OperationStatusModel.Builder(RequestOperationName.CANCEL_RESERVATION.name()).build();
+    public ResponseEntity<OperationStatusModel> cancelReservation(HttpServletRequest request) {
+        return new ResponseEntity<>(userService.cancelReservation(request), HttpStatus.OK);
     }
 
     /**
@@ -108,9 +106,9 @@ public class UserController {
      * @return "SUCCESS" or throw exception
      */
     @PutMapping(path = "/update-email")
-    public OperationStatusModel updateEmail(HttpServletRequest request) {
+    public ResponseEntity<OperationStatusModel> updateEmail(HttpServletRequest request) {
         userService.updateEmail(request);
-        return new OperationStatusModel.Builder(RequestOperationName.CHANGE_EMAIL.name()).build();
+        return new ResponseEntity<>(new OperationStatusModel.Builder(RequestOperationName.CHANGE_EMAIL.name()).build(), HttpStatus.OK);
     }
 
     /**
@@ -122,8 +120,8 @@ public class UserController {
      * sorted by busySeatsOverAllUsers then by takenSeat and then by capacity
      */
     @GetMapping(path = "/statistics/lectures-popularity")
-    public List<LectureStatisticsDAO> getLecturesByPopularity() {
-        return lectureService.getLecturesByPopularity();
+    public ResponseEntity<List<LectureStatisticsDAO>> getLecturesByPopularity() {
+        return new ResponseEntity<>(lectureService.getLecturesByPopularity(), HttpStatus.OK);
     }
 
     /**
@@ -134,7 +132,7 @@ public class UserController {
      * @return list of LectureThematicStatisticDAO objects sorted by busySeatsOverAllSeatsTaken field
      */
     @GetMapping(path = "/statistics/thematic-path-popularity")
-    public List<LectureThematicStatisticDAO> getLectures() {
-        return lectureService.getLecturesByThematicPathPopularity();
+    public ResponseEntity<List<LectureThematicStatisticDAO>> getLectures() {
+        return new ResponseEntity<>(lectureService.getLecturesByThematicPathPopularity(), HttpStatus.OK);
     }
 }

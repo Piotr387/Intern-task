@@ -3,6 +3,8 @@ package com.example.interntask.lecture;
 import com.example.interntask.user.UserEntity;
 
 import javax.persistence.*;
+import java.io.Serial;
+import java.io.Serializable;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,9 +16,12 @@ import static javax.persistence.GenerationType.IDENTITY;
  */
 
 @Entity(name = "lectures")
-public class LectureEntity {
+public class LectureEntity implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 2405172041950251807L;
     @Transient
-    private final int CAPACITY = 5;
+    private static final int CAPACITY = 5;
     @Id
     @GeneratedValue(strategy = IDENTITY)
     private long id;

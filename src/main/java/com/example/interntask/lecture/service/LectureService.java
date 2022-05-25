@@ -5,7 +5,6 @@ import com.example.interntask.lecture.dto.LectureDTO;
 import com.example.interntask.lecture.dto.LectureStatisticsDAO;
 import com.example.interntask.lecture.dto.LectureThematicStatisticDAO;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
