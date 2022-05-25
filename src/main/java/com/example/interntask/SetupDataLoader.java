@@ -9,6 +9,7 @@ import com.example.interntask.user.UserEntity;
 import com.example.interntask.user.UserRepository;
 import com.example.interntask.user.service.UserService;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
@@ -20,7 +21,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @Component
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class SetupDataLoader implements ApplicationListener<ContextRefreshedEvent> {
 
     boolean alreadySetup = false;
