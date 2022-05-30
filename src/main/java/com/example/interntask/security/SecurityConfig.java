@@ -40,7 +40,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.authorizeRequests().antMatchers("/users/login",
                 "/users/token/refresh/**",
-                "/lectures",
+                "/lectures/**",
                 "/users/sign-up/**"
         ).permitAll(); //Unauthorized access, no need access_token
         http.authorizeRequests().antMatchers(GET, "/users/lectures").hasAnyAuthority(USER_ROLE);

@@ -3,6 +3,7 @@ package com.example.interntask.lecture.service;
 import com.example.interntask.lecture.LectureEntity;
 import com.example.interntask.lecture.LectureRepository;
 import com.example.interntask.lecture.dto.LectureDTO;
+import com.example.interntask.lecture.dto.LectureDetailsDTO;
 import com.example.interntask.lecture.dto.LectureStatisticsDAO;
 import com.example.interntask.lecture.dto.LectureThematicStatisticDAO;
 import com.example.interntask.responde.ErrorMessages;
@@ -43,6 +44,18 @@ public class LectureServiceImplementation implements LectureService {
     }
 
     @Override
+    public List<LectureDetailsDTO> getLecturesDetails() {
+        return lectureRepository.findAll().stream()
+                .map(entity ->
+                        new LectureDetailsDTO(
+                                new ModelMapper().map(entity, LectureDTO.class),
+                                entity.getCAPACITY(),
+                                entity.getUserEntityListSize()
+                        ))
+                .toList();
+    }
+
+    @Override
     public List<LectureDTO> getLecturesByUserLogin(String login) {
         UserEntity userEntity = userRepository.findByLogin(login).orElseThrow(() -> {
             throw new UserServiceException(ErrorMessages.NO_USER_FOUND_WITH_PROVIDED_LOGIN.getErrorMessage());
@@ -62,21 +75,16 @@ public class LectureServiceImplementation implements LectureService {
                 .filter(user -> user.getRoles().contains(roleEntity))
                 .count();
 
-        //Get list of all lectures and convert to LectureStatisticsDAO
-        List<LectureStatisticsDAO> lectureStatisticsDAOList = lectureRepository.findAll().stream()
+        return lectureRepository.findAll().stream()
                 .map(lecture ->
                         new LectureStatisticsDAO(
                                 lecture,
                                 listCount))
-                .collect(Collectors.toList());
-
-        //Sort by busySeats/
-        lectureStatisticsDAOList.sort(
-                Comparator.comparing(LectureStatisticsDAO::getBusySeatsOverAllUsers).reversed()
-                        .thenComparing(LectureStatisticsDAO::getSeatTaken)
-                        .thenComparing(LectureStatisticsDAO::getSeatCapacity));
-
-        return lectureStatisticsDAOList;
+                .sorted(
+                        Comparator.comparing(LectureStatisticsDAO::getBusySeatsOverAllUsers).reversed()
+                                .thenComparing(LectureStatisticsDAO::getSeatTaken)
+                                .thenComparing(LectureStatisticsDAO::getSeatCapacity)
+                ).toList();
     }
 
     @Override

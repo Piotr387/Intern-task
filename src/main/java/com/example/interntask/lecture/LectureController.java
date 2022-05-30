@@ -1,6 +1,7 @@
 package com.example.interntask.lecture;
 
 import com.example.interntask.lecture.dto.LectureDTO;
+import com.example.interntask.lecture.dto.LectureDetailsDTO;
 import com.example.interntask.lecture.service.LectureService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -25,5 +26,10 @@ public class LectureController {
     @GetMapping()
     public ResponseEntity<List<LectureDTO>> getLectures(){
         return new ResponseEntity<>(lectureService.getLectures(), HttpStatus.OK);
+    }
+
+    @GetMapping(path = "/details")
+    public ResponseEntity<List<LectureDetailsDTO>> getLecturesDetails(){
+        return new ResponseEntity<>(lectureService.getLecturesDetails(), HttpStatus.OK);
     }
 }
