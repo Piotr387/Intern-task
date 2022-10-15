@@ -8,6 +8,9 @@ import com.pp.lecture.LectureEntity;
 import com.pp.lecture.dto.LectureDTO;
 import com.pp.lecture.dto.LectureSignUpDTO;
 import com.pp.lecture.service.LectureService;
+import com.pp.messages.EmailRegistrationConfirmRequest;
+import com.pp.messages.EmailSignUpConfirmationRequest;
+import com.pp.messages.MessegesClient;
 import com.pp.responde.ErrorMessages;
 import com.pp.responde.OperationStatusModel;
 import com.pp.responde.RequestOperationName;
@@ -27,17 +30,14 @@ import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
-import org.springframework.http.*;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 @Service
 @RequiredArgsConstructor
@@ -49,7 +49,7 @@ public class UserServiceImplementation implements UserService, UserDetailsServic
     private final UserRepository userRepository;
     private final RoleService roleService;
     private final LectureService lectureService;
-    private final RestTemplate restTemplate;
+    private final MessegesClient messegesClient;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -81,15 +81,13 @@ public class UserServiceImplementation implements UserService, UserDetailsServic
         return createUserWithPassword(userDTO, utilities.generatePassword());
     }
 
-    @SneakyThrows
     @Override
     @Transactional(rollbackOn = Exception.class)
     public UserEntity createUserWithPassword(UserDTO userDTO, String password) {
         UserEntity userEntity = new ModelMapper().map(userDTO, UserEntity.class);
         userEntity.setEncryptedPassword(passwordEncoder.encode(password));
         userRepository.save(userEntity);
-        var map = new EmailRegistrationRequest(userEntity.getLogin(), userEntity.getEmail(), password);
-        restTemplate.postForLocation("http://messages/api/v1/email/registration", map);
+        messegesClient.sendRegistrationConfirmEmail(new EmailRegistrationConfirmRequest(userEntity.getLogin(), userEntity.getEmail(), password));
         return userEntity;
     }
 
@@ -118,7 +116,6 @@ public class UserServiceImplementation implements UserService, UserDetailsServic
         return signUpForLecture(userEntity, request.getParameter("lectureName"));
     }
 
-    @SneakyThrows
     @Override
     public OperationStatusModel signUpForLecture(UserEntity userEntity, String lectureName) {
 
@@ -136,8 +133,7 @@ public class UserServiceImplementation implements UserService, UserDetailsServic
         UserEntity user = signUpTransaction(lectureEntity, userEntity);
         if (user == null)
             throw new UserServiceException(ErrorMessages.SOMETHING_WENT_WRONG.getErrorMessage());
-        var map = new EmailMessageRequest(user.getLogin(), user.getEmail(), lectureName, lectureEntity.getStartTime());
-        sendPostRequest("http://messages/api/v1/email/confirmation-sign-up", map);
+        messegesClient.sendEmail(new EmailSignUpConfirmationRequest(user.getLogin(), user.getEmail(), lectureName, lectureEntity.getStartTime()));
         return new OperationStatusModel.Builder(RequestOperationName.SIGN_UP_FOR_LECTURE.name()).build();
     }
 
@@ -237,21 +233,5 @@ public class UserServiceImplementation implements UserService, UserDetailsServic
             throw new UserServiceException(ErrorMessages.NO_USER_FOUND_WITH_PROVIDED_LOGIN.getErrorMessage());
         });
         return new ModelMapper().map(userEntity, UserDTO.class);
-    }
-
-    private void sendPostRequest(String URL, Object body){
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.setBearerAuth(utilities.createAccessTokenForMicroservice());
-        HttpEntity<Object> entity = new HttpEntity<>(body, headers);
-
-        ResponseEntity<Void> response = restTemplate.postForEntity(URL, entity, Void.class);
-
-        // check response
-        if (response.getStatusCode() == HttpStatus.OK) {
-            log.info("Request Successful");
-        } else {
-            log.error("Request Failed");
-        }
     }
 }

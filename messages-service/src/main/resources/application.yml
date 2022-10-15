@@ -4,7 +4,7 @@ spring:
       name: techUser
       password: techUser
   application:
-    name: messages
+    name: messages-service
 server:
   port: '9091'
 eureka:

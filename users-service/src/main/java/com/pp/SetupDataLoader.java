@@ -3,7 +3,6 @@ package com.pp;
 import com.pp.lecture.LectureEntity;
 import com.pp.lecture.LectureRepository;
 import com.pp.lecture.dto.LectureSignUpDTO;
-import com.pp.lecture.service.LectureService;
 import com.pp.role.RoleService;
 import com.pp.user.UserDTO;
 import com.pp.user.UserEntity;
@@ -16,27 +15,27 @@ import java.util.Arrays;
 import java.util.List;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.ApplicationListener;
-import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 @Component
 @RequiredArgsConstructor
 @Deprecated(since = "Intern-task 2.1.0")
-public class SetupDataLoader implements ApplicationListener<ContextRefreshedEvent> {
+class SetupDataLoader implements CommandLineRunner {
 
   boolean alreadySetup = true;
 
   private final UserService userService;
-  private final LectureService lectureService;
   private final UserRepository userRepository;
   private final LectureRepository lectureRepository;
   private final RoleService roleService;
 
   @Override
-  @Transactional
-  public void onApplicationEvent(ContextRefreshedEvent event) {
+  public void run(String... args) throws Exception {
+    loadInitialData();
+  }
+
+  public void loadInitialData() {
 
     if (alreadySetup)
       return;
