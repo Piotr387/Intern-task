@@ -23,9 +23,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Component
 @RequiredArgsConstructor
+@Deprecated(since = "Intern-task 2.1.0")
 public class SetupDataLoader implements ApplicationListener<ContextRefreshedEvent> {
 
-  boolean alreadySetup = false;
+  boolean alreadySetup = true;
 
   private final UserService userService;
   private final LectureService lectureService;

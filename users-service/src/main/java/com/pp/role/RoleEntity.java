@@ -10,6 +10,8 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
+import static javax.persistence.GenerationType.IDENTITY;
+
 @Entity(name = "roles")
 @Getter
 @Setter
@@ -19,7 +21,7 @@ public class RoleEntity implements Serializable {
     private static final long serialVersionUID = -1209289997505536602L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
     private String name;
