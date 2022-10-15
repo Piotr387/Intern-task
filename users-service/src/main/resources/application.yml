@@ -1,0 +1,37 @@
+spring:
+  flyway:
+    enabled: 'true'
+    validateOnMigrate: 'true'
+    password: ${spring.datasource.password}
+    user: ${spring.datasource.username}
+    sqlMigrationSeparator: __
+    locations: classpath:db/migration
+    url: ${spring.datasource.url}
+    table: FLYWAY_SCHEMA_HISTORY
+    sqlMigrationPrefix: US_
+  datasource:
+    driverClassName: org.h2.Driver
+    password: sa
+    username: sa
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1
+  h2:
+    console:
+      path: /h2
+      enabled: 'true'
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    database-platform: org.hibernate.dialect.H2Dialect
+  application:
+    name: user-service
+server:
+  error:
+    include-stacktrace: never
+    include-message: always
+  port: '9090'
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+    fetch-registry: true
+    register-with-eureka: true

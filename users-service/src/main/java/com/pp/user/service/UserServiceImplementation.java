@@ -89,7 +89,7 @@ public class UserServiceImplementation implements UserService, UserDetailsServic
         userEntity.setEncryptedPassword(passwordEncoder.encode(password));
         userRepository.save(userEntity);
         var map = new EmailRegistrationRequest(userEntity.getLogin(), userEntity.getEmail(), password);
-        restTemplate.postForLocation("http://localhost:9091/api/v1/email/registration", map);
+        restTemplate.postForLocation("http://messages/api/v1/email/registration", map);
         return userEntity;
     }
 
@@ -137,7 +137,7 @@ public class UserServiceImplementation implements UserService, UserDetailsServic
         if (user == null)
             throw new UserServiceException(ErrorMessages.SOMETHING_WENT_WRONG.getErrorMessage());
         var map = new EmailMessageRequest(user.getLogin(), user.getEmail(), lectureName, lectureEntity.getStartTime());
-        sendPostRequest("http://localhost:9091/api/v1/email/confirmation-sign-up", map);
+        sendPostRequest("http://messages/api/v1/email/confirmation-sign-up", map);
         return new OperationStatusModel.Builder(RequestOperationName.SIGN_UP_FOR_LECTURE.name()).build();
     }
 

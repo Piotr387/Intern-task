@@ -9,6 +9,7 @@
     <modules>
         <module>messages-service</module>
         <module>users-service</module>
+        <module>eureka-server</module>
     </modules>
 
     <name>Intern-task</name>
