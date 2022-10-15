@@ -5,6 +5,8 @@ spring:
       password: techUser
   application:
     name: messages-service
+  zipkin:
+    base-url: http://localhost:9411
 server:
   port: '9091'
 eureka:
