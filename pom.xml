@@ -11,6 +11,7 @@
         <module>users-service</module>
         <module>eureka-server</module>
         <module>openfeign</module>
+        <module>apigw</module>
     </modules>
 
     <name>Intern-task</name>
