@@ -12,6 +12,7 @@
         <module>eureka-server</module>
         <module>openfeign</module>
         <module>apigw</module>
+        <module>amqp</module>
     </modules>
 
     <name>Intern-task</name>

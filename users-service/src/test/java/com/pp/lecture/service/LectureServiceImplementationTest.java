@@ -1,15 +1,16 @@
 package com.pp.lecture.service;
 
-import com.pp.lecture.LectureEntity;
-import com.pp.lecture.LectureRepository;
-import com.pp.lecture.dto.LectureDTO;
-import com.pp.lecture.dto.LectureStatisticsDAO;
-import com.pp.lecture.dto.LectureThematicStatisticDAO;
-import com.pp.responde.UserServiceException;
-import com.pp.role.RoleEntity;
-import com.pp.role.RoleService;
-import com.pp.user.UserEntity;
-import com.pp.user.UserRepository;
+import com.pp.userservice.lecture.LectureEntity;
+import com.pp.userservice.lecture.LectureRepository;
+import com.pp.userservice.lecture.dto.LectureDTO;
+import com.pp.userservice.lecture.dto.LectureStatisticsDAO;
+import com.pp.userservice.lecture.dto.LectureThematicStatisticDAO;
+import com.pp.userservice.lecture.service.LectureServiceImplementation;
+import com.pp.userservice.responde.UserServiceException;
+import com.pp.userservice.role.RoleEntity;
+import com.pp.userservice.role.RoleService;
+import com.pp.userservice.user.UserEntity;
+import com.pp.userservice.user.UserRepository;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.modelmapper.ModelMapper;

@@ -7,6 +7,8 @@ spring:
     name: messages-service
   zipkin:
     base-url: http://localhost:9411
+  rabbitmq:
+    addresses: localhost:5672
 server:
   port: '9091'
 eureka:
@@ -15,3 +17,11 @@ eureka:
       defaultZone: http://localhost:8761/eureka
     fetch-registry: true
     register-with-eureka: true
+
+rabbitmq:
+  exchanges:
+    internal: internal.exchange
+  queue:
+    email: messages-queue
+  routing-keys:
+    internal-email: internal.email.routing-key
