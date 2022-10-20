@@ -2,7 +2,8 @@
 	"info": {
 		"_postman_id": "4422209d-5561-449c-ba9a-e0ada5c4cab8",
 		"name": "Intern_Task",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "20338292"
 	},
 	"item": [
 		{
@@ -11,15 +12,16 @@
 				{
 					"name": "List of all lectures",
 					"request": {
+						"auth": {
+							"type": "noauth"
+						},
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/lectures",
-							"protocol": "http",
+							"raw": "{{URL}}/lectures",
 							"host": [
-								"localhost"
+								"{{URL}}"
 							],
-							"port": "8080",
 							"path": [
 								"lectures"
 							]
@@ -28,7 +30,41 @@
 					"response": []
 				},
 				{
+					"name": "List of all lectures details",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/lectures/details",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"lectures",
+								"details"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Login user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);\r",
+									"pm.collectionVariables.set(\"token\", jsonData.access_token)\r",
+									"pm.collectionVariables.set(\"refresh_token\", jsonData.refresh_token)"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "POST",
 						"header": [],
@@ -48,12 +84,10 @@
 							]
 						},
 						"url": {
-							"raw": "http://localhost:8080/users/login",
-							"protocol": "http",
+							"raw": "{{URL}}/users/login",
 							"host": [
-								"localhost"
+								"{{URL}}"
 							],
-							"port": "8080",
 							"path": [
 								"users",
 								"login"
@@ -64,6 +98,19 @@
 				},
 				{
 					"name": "Login organizer",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);\r",
+									"pm.collectionVariables.set(\"token\", jsonData.access_token)\r",
+									"pm.collectionVariables.set(\"refresh_token\", jsonData.refresh_token)"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "POST",
 						"header": [],
@@ -72,23 +119,21 @@
 							"urlencoded": [
 								{
 									"key": "login",
-									"value": "organizator1",
+									"value": "organizer1",
 									"type": "text"
 								},
 								{
 									"key": "password",
-									"value": "organizator1",
+									"value": "organizer1",
 									"type": "text"
 								}
 							]
 						},
 						"url": {
-							"raw": "http://localhost:8080/users/login",
-							"protocol": "http",
+							"raw": "{{URL}}/users/login",
 							"host": [
-								"localhost"
+								"{{URL}}"
 							],
-							"port": "8080",
 							"path": [
 								"users",
 								"login"
@@ -99,6 +144,19 @@
 				},
 				{
 					"name": "Refresh token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);\r",
+									"pm.collectionVariables.set(\"token\", jsonData.access_token)\r",
+									"pm.collectionVariables.set(\"refresh_token\", jsonData.refresh_token)"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -120,12 +178,10 @@
 							"urlencoded": []
 						},
 						"url": {
-							"raw": "http://localhost:8080/users/token/refresh",
-							"protocol": "http",
+							"raw": "{{URL}}/users/token/refresh",
 							"host": [
-								"localhost"
+								"{{URL}}"
 							],
-							"port": "8080",
 							"path": [
 								"users",
 								"token",
@@ -138,11 +194,14 @@
 				{
 					"name": "Sign up user for lecture",
 					"request": {
+						"auth": {
+							"type": "noauth"
+						},
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"lectureName\": \"Lecture 1 at 12:00\",\r\n    \"userDTO\" : {\r\n        \"login\":\"test\",\r\n        \"email\":\"test@gmail.com\"\r\n    }\r\n\r\n}",
+							"raw": "{\r\n    \"lectureName\": \"Lecture 1 at 12:00\",\r\n    \"userDTO\" : {\r\n        \"login\":\"test\",\r\n        \"email\":\"test83@gmail.com\"\r\n    }\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -150,12 +209,10 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/users/sign-up/",
-							"protocol": "http",
+							"raw": "{{URL}}/users/sign-up/",
 							"host": [
-								"localhost"
+								"{{URL}}"
 							],
-							"port": "8080",
 							"path": [
 								"users",
 								"sign-up",
@@ -173,25 +230,13 @@
 				{
 					"name": "List of all user's lecutres",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZTE3Iiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlzcyI6Imh0dHA6Ly9sb2NhbGhvc3Q6ODA4MC91c2Vycy9sb2dpbiIsImV4cCI6MTY1MjM1Njk1NX0.fLKWgrWxtDLVRTo16eAuBzy1SbHWvxv5vA5jqk0hWLo",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/users/lectures",
-							"protocol": "http",
+							"raw": "{{URL}}/users/lectures",
 							"host": [
-								"localhost"
+								"{{URL}}"
 							],
-							"port": "8080",
 							"path": [
 								"users",
 								"lectures"
@@ -203,25 +248,13 @@
 				{
 					"name": "User account details",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0Iiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlzcyI6Imh0dHA6Ly9sb2NhbGhvc3Q6ODA4MC91c2Vycy9sb2dpbiIsImV4cCI6MTY1MjQ0MzE2MX0.HZobswaDDWWUkg_LJG46pcK89-B58m7HHA_AKknOiPE",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/users/account",
-							"protocol": "http",
+							"raw": "{{URL}}/users/account",
 							"host": [
-								"localhost"
+								"{{URL}}"
 							],
-							"port": "8080",
 							"path": [
 								"users",
 								"account"
@@ -233,16 +266,6 @@
 				{
 					"name": "Registered user sign up for lecture",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZTEiLCJyb2xlcyI6WyJST0xFX1VTRVIiXSwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwL3VzZXJzL2xvZ2luIiwiZXhwIjoxNjUyMzU2NzMwfQ.lv3kGO5rFl7SS8vmiTkJwlPC7T_nZxWomZb2ZzBnmWQ",
-									"type": "string"
-								}
-							]
-						},
 						"method": "POST",
 						"header": [],
 						"body": {
@@ -256,12 +279,10 @@
 							]
 						},
 						"url": {
-							"raw": "http://localhost:8080/users/sign-up-register",
-							"protocol": "http",
+							"raw": "{{URL}}/users/sign-up-register",
 							"host": [
-								"localhost"
+								"{{URL}}"
 							],
-							"port": "8080",
 							"path": [
 								"users",
 								"sign-up-register"
@@ -273,16 +294,6 @@
 				{
 					"name": "Cancel user reservation",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0MiIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwODAvdXNlcnMvbG9naW4iLCJleHAiOjE2NTI0NDUxMDV9.-Hb7lDjgprAEdWwGqsDgO4O74P3KTlm_89CS2Tma9F4",
-									"type": "string"
-								}
-							]
-						},
 						"method": "DELETE",
 						"header": [],
 						"body": {
@@ -296,12 +307,10 @@
 							]
 						},
 						"url": {
-							"raw": "http://localhost:8080/users/cancel",
-							"protocol": "http",
+							"raw": "{{URL}}/users/cancel",
 							"host": [
-								"localhost"
+								"{{URL}}"
 							],
-							"port": "8080",
 							"path": [
 								"users",
 								"cancel"
@@ -313,16 +322,6 @@
 				{
 					"name": "Update email",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0MiIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwODAvdXNlcnMvbG9naW4iLCJleHAiOjE2NTI0NDUxMDV9.-Hb7lDjgprAEdWwGqsDgO4O74P3KTlm_89CS2Tma9F4",
-									"type": "string"
-								}
-							]
-						},
 						"method": "PUT",
 						"header": [],
 						"body": {
@@ -336,12 +335,10 @@
 							]
 						},
 						"url": {
-							"raw": "http://localhost:8080/users/update-email",
-							"protocol": "http",
+							"raw": "{{URL}}/users/update-email",
 							"host": [
-								"localhost"
+								"{{URL}}"
 							],
-							"port": "8080",
 							"path": [
 								"users",
 								"update-email"
@@ -358,25 +355,13 @@
 				{
 					"name": "List of all users",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvcmdhbml6YXRvcjEiLCJyb2xlcyI6WyJST0xFX09SR0FOSVpFUiJdLCJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwODAvdXNlcnMvdG9rZW4vcmVmcmVzaCIsImV4cCI6MTY1MjQ0Mjk5N30.vnzWFnnkAwF4G0TljEGL3dgET8UXlE6t8OSIRO7DTv4",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/users",
-							"protocol": "http",
+							"raw": "{{URL}}/users",
 							"host": [
-								"localhost"
+								"{{URL}}"
 							],
-							"port": "8080",
 							"path": [
 								"users"
 							]
@@ -386,26 +371,25 @@
 				},
 				{
 					"name": "statistics/lectures-popularity",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvcmdhbml6YXRvcjEiLCJyb2xlcyI6WyJST0xFX09SR0FOSVpFUiJdLCJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwODAvdXNlcnMvdG9rZW4vcmVmcmVzaCIsImV4cCI6MTY1MjQ0Mjk5N30.vnzWFnnkAwF4G0TljEGL3dgET8UXlE6t8OSIRO7DTv4",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/users/statistics/lectures-popularity",
-							"protocol": "http",
+							"raw": "{{URL}}/users/statistics/lectures-popularity",
 							"host": [
-								"localhost"
+								"{{URL}}"
 							],
-							"port": "8080",
 							"path": [
 								"users",
 								"statistics",
@@ -418,25 +402,13 @@
 				{
 					"name": "thematic-path-popularity",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvcmdhbml6YXRvcjEiLCJyb2xlcyI6WyJST0xFX09SR0FOSVpFUiJdLCJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwODAvdXNlcnMvdG9rZW4vcmVmcmVzaCIsImV4cCI6MTY1MjQ0Mjk5N30.vnzWFnnkAwF4G0TljEGL3dgET8UXlE6t8OSIRO7DTv4",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/users/statistics/thematic-path-popularity",
-							"protocol": "http",
+							"raw": "{{URL}}/users/statistics/thematic-path-popularity",
 							"host": [
-								"localhost"
+								"{{URL}}"
 							],
-							"port": "8080",
 							"path": [
 								"users",
 								"statistics",
@@ -447,6 +419,51 @@
 					"response": []
 				}
 			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{token}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "token",
+			"value": "xvY2FsaG9zdDo4MDgwL3VzZXJzL2"
+		},
+		{
+			"key": "refresh_token",
+			"value": "0",
+			"type": "string"
+		},
+		{
+			"key": "URL",
+			"value": "http://localhost:9093"
 		}
 	]
 }
