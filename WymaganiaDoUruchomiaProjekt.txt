@@ -1,0 +1,3 @@
+Projekt bazuje na JDK 17
+Do wymagania działania projektu wymagany jest program Papercut SMTP aby wiadomosci mogły być wysyłane
+Do przetestowania programu zostal exportowany plik z zapytaniami w programie postman
