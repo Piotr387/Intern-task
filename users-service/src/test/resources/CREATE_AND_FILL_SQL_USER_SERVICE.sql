@@ -1,38 +1,68 @@
 CREATE TABLE LECTURES
 (
-    ID            LONG PRIMARY KEY NOT NULL,
-    NAME          VARCHAR(255)     NOT NULL,
-    THEMATIC_PATH VARCHAR(255)     NOT NULL,
-    START_TIME    TIME             NOT NULL
+    ID            LONG         SERIAL NOT NULL PRIMARY KEY,
+    NAME          VARCHAR(255) NOT NULL,
+    THEMATIC_PATH VARCHAR(255) NOT NULL,
+    START_TIME    TIME         NOT NULL
 );
 
 CREATE TABLE USERS
 (
-    ID                 LONG PRIMARY KEY NOT NULL,
+    ID                 LONG SERIAL NOT NULL PRIMARY KEY,
     LOGIN              VARCHAR(255),
     EMAIL              VARCHAR(255),
     ENCRYPTED_PASSWORD VARCHAR(255)
 );
 
+ALTER TABLE USERS
+    ADD UNIQUE ("LOGIN");
+ALTER TABLE USERS
+    ADD UNIQUE ("EMAIL");
+
 CREATE TABLE ROLES
 (
-    ID   LONG PRIMARY KEY NOT NULL,
-    NAME VARCHAR(255)     NOT NULL
+    ID   LONG         SERIAL NOT NULL PRIMARY KEY,
+    NAME VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE USER_LECTURE
 (
-    ID         LONG PRIMARY KEY NOT NULL,
-    USER_ID    LONG             NOT NULL,
-    LECTURE_ID LONG             NOT NULL
+    ID         LONG SERIAL NOT NULL PRIMARY KEY,
+    USER_ID    LONG NOT NULL,
+    LECTURE_ID LONG NOT NULL
 );
+
+ALTER TABLE USER_LECTURE
+    ADD CONSTRAINT FK_USER_LECTURE_USER_ID
+        FOREIGN KEY ("USER_ID")
+            REFERENCES USERS (ID);
+ALTER TABLE USER_LECTURE
+    ADD CONSTRAINT FK_USER_LECTURE_LECTURE_ID
+        FOREIGN KEY ("LECTURE_ID")
+            REFERENCES LECTURES (ID);
 
 CREATE TABLE USERS_ROLES
 (
-    ID      LONG PRIMARY KEY NOT NULL,
-    USER_ID LONG             NOT NULL,
-    ROLE_ID LONG             NOT NULL
+    ID      LONG SERIAL NOT NULL PRIMARY KEY,
+    USER_ID LONG NOT NULL,
+    ROLE_ID LONG NOT NULL
 );
+
+ALTER TABLE USERS_ROLES
+    ADD CONSTRAINT FK_USERS_ROLES_ROLE_ID
+        FOREIGN KEY ("ROLE_ID")
+            REFERENCES ROLES (ID);
+ALTER TABLE USERS_ROLES
+    ADD CONSTRAINT FK_USERS_ROLES_USER_ID
+        FOREIGN KEY ("USER_ID")
+            REFERENCES USERS (ID);
+
+CREATE SEQUENCE HIBERNATE_SEQUENCE
+    INCREMENT BY 1
+    MINVALUE 1
+    MAXVALUE 999999
+    START WITH 1
+    NO CYCLE;
 
 INSERT INTO LECTURES(ID, NAME, THEMATIC_PATH, START_TIME)
 VALUES (1, 'Lecture 1 at 10:00', 'Frontend', '10:00:00'),
@@ -50,16 +80,16 @@ VALUES (1, 'ROLE_ORGANIZER'),
        (2, 'ROLE_USER');
 
 INSERT INTO USERS(ID, LOGIN, EMAIL, ENCRYPTED_PASSWORD)
-VALUES (1, 'test', 'test@test.com', 'mbpHtTXoOpvpAO/3tp9eEg=='), -- test
-       (2, 'organizator1', 'organizator@organizator.com', 'Q5LYX2IlO8R0vxaNaOQjvhvwD74epinq'), -- organizator1
-       (3, 'username1', 'username1@username1.com', '0ub+5VN40O4qQBT9ZhLi+AcPlLci3UjC'), -- rpP3rU0tqT9nGyr
-       (4, 'username2', 'username2@username2.com', 'QefDCX+8zYaMJ09bJi+3SdJoD64aQnpe'), -- zHY70ThUpfLERKq
-       (5, 'username3', 'username3@username3.com', 'ycLhHFOgNJxW+J7PDVq9wrRTHRZ12E6a'), -- kajemsTQ9U4YhRu
-       (6, 'username4', 'username4@username4.com', 'vVVg6HGtdtxWgTrRju6Ru9vrfl5+FFHF'), -- pOmqK1Ad0F3Fn0E
-       (7, 'username5', 'username5@username5.com', 'qhWm/7Cw4Fnji0bOw9m164JHorvgQ9IF'), -- qtBc4TPpkDxrAYP
-       (8, 'username6', 'username6@username6.com', 'axpMbnqBO/Tt8Y1YUgbg+dTKQgXIv4jR'), -- Lb70q7X2dzglZk2
-       (9, 'username7', 'username7@username7.com', 'tU4G74z/a1ISN7DiY9LWCHJzzgelHQFf'), -- 1dz2QeQlDGMYg32
-       (10, 'username8', 'username8@username8.com', 'pxBA+hFjds0DWsZFgxSyc5i2DeHZVyEw'); -- TRZ3w78j6pAcyf8
+VALUES (1, 'test', 'test@test.com', '$2a$10$XrGZ4MqlAJzbhEQFUkYKf.UpNw6gPtV0U.bovIVlp8s7Tx4vP.vDi'), -- test
+       (2, 'organizator1', 'organizator@organizator.com', '$2a$10$LHWcf3gL3E3Acu3DZy7s/uoSy9iFgOv0Q1JlnJ4OmLfVbucHF5Mkq'), -- organizator1
+       (3, 'username1', 'username1@username1.com', '$2a$10$Zeunh4ox/scWB7.pr06S8OhLEB2WuZGzZiqK3PSgXQOmXp.kiJQXW'), -- rpP3rU0tqT9nGyr
+       (4, 'username2', 'username2@username2.com', '$2a$10$/5zsyzvZQN.U.Hl3Xcy5rujjJaGsdNC2aeTKoJlX1LozsboE5HrI2'), -- zHY70ThUpfLERKq
+       (5, 'username3', 'username3@username3.com', '$2a$10$ql0ni6WYyASsIYuTv6jIl.SXDCHCb89IyiWaCo8EbYSOp9LYaYsyq'), -- kajemsTQ9U4YhRu
+       (6, 'username4', 'username4@username4.com', '$2a$10$aT4TbRqT3.RwT9uGwX212eL/ly1MWyiGlOoRiqXWnbj8MXadG.HjW'), -- pOmqK1Ad0F3Fn0E
+       (7, 'username5', 'username5@username5.com', '$2a$10$..SWPmnJs4sFhH3o75afG.rMlQ1CFBmvcGItck15vj4nwvZrtOPj.'), -- qtBc4TPpkDxrAYP
+       (8, 'username6', 'username6@username6.com', '$2a$10$iUO4OcXg6j6SddJRNWX/POR5uVbWjos8OsxZ9xWJ0/HRBWFIjeHhO'), -- Lb70q7X2dzglZk2
+       (9, 'username7', 'username7@username7.com', '$2a$10$8U3lxmmiwi.KGLDhUSr5wOLtPnyYxWrIX/pTwbVUZvo5MYNYKXUdS'), -- 1dz2QeQlDGMYg32
+       (10, 'username8', 'username8@username8.com', '$2a$10$lkedbH/56wPYfe.zpqIRXeeBw81QZ/PllkhqbxElJHd6Dj.FB8C3C'); -- TRZ3w78j6pAcyf8ó
 
 INSERT INTO USERS_ROLES(ID, USER_ID, ROLE_ID)
 VALUES (1, 1, 2),

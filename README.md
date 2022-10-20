@@ -1,3 +1,7 @@
+### OUTDATED -> https://github.com/Piotr387/Intern-task
+Projekt bazuje na JDK 17
+Do wymagania działania projektu wymagany jest program Papercut SMTP aby wiadomosci mogły być wysyłane
+
 ## Opis wykonanego zadania:
 Do przechowania danych wykorzystałem bazę danych H2 (in-memory). Dane zostały zaincjalizowane w klasie SetupDataLoader 
 Został zaimplementowany Spring Security aby dostęp do odpowiednich endpointów miał tylko autoryzowany użytkownik.

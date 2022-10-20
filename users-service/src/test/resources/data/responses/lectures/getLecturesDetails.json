@@ -1,0 +1,83 @@
+[
+  {
+    "lectureDTO": {
+      "name": "Lecture 1 at 10:00",
+      "thematicPath": "Frontend",
+      "startTime": "10:00:00"
+    },
+    "capacity": 5,
+    "takenSeats": 5
+  },
+  {
+    "lectureDTO": {
+      "name": "Lecture 2 at 10:00",
+      "thematicPath": "Backend",
+      "startTime": "10:00:00"
+    },
+    "capacity": 5,
+    "takenSeats": 0
+  },
+  {
+    "lectureDTO": {
+      "name": "Lecture 3 at 10:00",
+      "thematicPath": "Architect",
+      "startTime": "10:00:00"
+    },
+    "capacity": 5,
+    "takenSeats": 0
+  },
+  {
+    "lectureDTO": {
+      "name": "Lecture 1 at 12:00",
+      "thematicPath": "Frontend",
+      "startTime": "12:00:00"
+    },
+    "capacity": 5,
+    "takenSeats": 0
+  },
+  {
+    "lectureDTO": {
+      "name": "Lecture 2 at 12:00",
+      "thematicPath": "Backend",
+      "startTime": "12:00:00"
+    },
+    "capacity": 5,
+    "takenSeats": 4
+  },
+  {
+    "lectureDTO": {
+      "name": "Lecture 3 at 12:00",
+      "thematicPath": "Architect",
+      "startTime": "12:00:00"
+    },
+    "capacity": 5,
+    "takenSeats": 0
+  },
+  {
+    "lectureDTO": {
+      "name": "Lecture 1 at 14:00",
+      "thematicPath": "Frontend",
+      "startTime": "14:00:00"
+    },
+    "capacity": 5,
+    "takenSeats": 0
+  },
+  {
+    "lectureDTO": {
+      "name": "Lecture 2 at 14:00",
+      "thematicPath": "Backend",
+      "startTime": "14:00:00"
+    },
+    "capacity": 5,
+    "takenSeats": 3
+  },
+  {
+    "lectureDTO": {
+      "name": "Lecture 3 at 14:00",
+      "thematicPath": "Architect",
+      "startTime": "14:00:00"
+    },
+    "capacity": 5,
+    "takenSeats": 0
+  }
+]

@@ -12,7 +12,7 @@ import java.nio.charset.StandardCharsets;
 
 @Component
 @RequiredArgsConstructor
-class FileUtilities {
+public class FileUtilities {
 
     private static final int BUFFER_SIZE = 1024;
 

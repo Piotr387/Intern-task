@@ -18,11 +18,14 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
+import static com.pp.userservice.user.UserController.USERS_ENDPOINT;
+
 @RestController
-@RequestMapping("/users")
+@RequestMapping(value = USERS_ENDPOINT)
 @AllArgsConstructor
 public class UserController {
 
+    static final String USERS_ENDPOINT = "/users";
     private final LectureService lectureService;
     private final UserService userService;
 

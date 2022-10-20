@@ -2,6 +2,7 @@ package com.pp.common;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.test.web.servlet.MvcResult;
 
 @Component

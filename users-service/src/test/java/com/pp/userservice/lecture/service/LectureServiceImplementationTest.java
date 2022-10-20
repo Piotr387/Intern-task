@@ -1,4 +1,4 @@
-package com.pp.lecture.service;
+package com.pp.userservice.lecture.service;
 
 import com.pp.userservice.lecture.LectureEntity;
 import com.pp.userservice.lecture.LectureRepository;
