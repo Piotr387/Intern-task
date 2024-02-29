@@ -2,6 +2,7 @@ package com.pp.userservice.user.service;
 
 import com.pp.userservice.lecture.dto.LectureDTO;
 import com.pp.userservice.lecture.dto.LectureSignUpDTO;
+import com.pp.userservice.lecture.dto.LectureWithFirstRegistration;
 import com.pp.userservice.responde.OperationStatusModel;
 import com.pp.userservice.user.UserDTO;
 import com.pp.userservice.user.UserEntity;
@@ -45,4 +46,6 @@ public interface UserService {
     List<LectureDTO> getUserLecture(HttpServletRequest request);
 
     UserDTO getUserAccountDetails(HttpServletRequest request);
+
+    OperationStatusModel signUp(LectureWithFirstRegistration lectureSignUpDTO);
 }

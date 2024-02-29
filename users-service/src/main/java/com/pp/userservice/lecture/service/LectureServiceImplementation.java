@@ -5,6 +5,7 @@ import com.pp.userservice.lecture.LectureEntity;
 import com.pp.userservice.lecture.LectureRepository;
 import com.pp.userservice.lecture.dto.LectureDTO;
 import com.pp.userservice.lecture.dto.LectureDetailsDTO;
+import com.pp.userservice.lecture.dto.LectureDetailsWithUser;
 import com.pp.userservice.lecture.dto.LectureStatisticsDAO;
 import com.pp.userservice.lecture.dto.LectureThematicStatisticDAO;
 import com.pp.userservice.responde.ErrorMessages;
@@ -12,11 +13,13 @@ import com.pp.userservice.responde.UserServiceException;
 import com.pp.userservice.role.RoleEntity;
 import com.pp.userservice.role.RoleService;
 import com.pp.userservice.user.UserEntity;
+import com.pp.userservice.user.UserLoginWithEmail;
 import com.pp.userservice.user.UserRepository;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -34,6 +37,26 @@ public class LectureServiceImplementation implements LectureService {
         return lectureRepository.findAll().stream()
                 .map(entity -> new ModelMapper().map(entity, LectureDTO.class))
                 .toList();
+    }
+
+    public List<LectureDetailsWithUser> getLecturesWithUser() {
+
+        return lectureRepository.findAll().stream()
+                .map(this::convertEntityTOLecturesWithUser)
+                .toList();
+    }
+
+    private LectureDetailsWithUser convertEntityTOLecturesWithUser(LectureEntity lectureEntity) {
+
+        var userLoginAndPassword = lectureEntity.getUserEntityList().stream().map(entity -> new UserLoginWithEmail(entity.getLogin(), entity.getEmail())).toList();
+
+        return new LectureDetailsWithUser(
+                String.valueOf(lectureEntity.getId()), //
+                lectureEntity.getName(), //
+                lectureEntity.getStartTime().format(DateTimeFormatter.ISO_LOCAL_TIME), //
+                lectureEntity.getThematicPath(), //
+                userLoginAndPassword //
+        );
     }
 
     @Override

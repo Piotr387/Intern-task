@@ -1,9 +1,11 @@
 package com.pp.userservice.user;
 
 import com.pp.userservice.lecture.dto.LectureDTO;
+import com.pp.userservice.lecture.dto.LectureDetailsWithUser;
 import com.pp.userservice.lecture.dto.LectureSignUpDTO;
 import com.pp.userservice.lecture.dto.LectureStatisticsDAO;
 import com.pp.userservice.lecture.dto.LectureThematicStatisticDAO;
+import com.pp.userservice.lecture.dto.LectureWithFirstRegistration;
 import com.pp.userservice.lecture.service.LectureService;
 import com.pp.userservice.responde.OperationStatusModel;
 import com.pp.userservice.responde.RequestOperationName;
@@ -82,6 +84,19 @@ public class UserController {
     public ResponseEntity<OperationStatusModel> signUpUserForLecture(@RequestBody LectureSignUpDTO lectureSignUpDTO) {
         return new ResponseEntity<>(userService.signUp(lectureSignUpDTO), HttpStatus.OK);
     }
+
+    @PostMapping(path = "/v2/sign-up")
+    public ResponseEntity<OperationStatusModel> signUpUserForLecture(@RequestBody LectureWithFirstRegistration lectureSignUpDTO) {
+        return new ResponseEntity<>(userService.signUp(lectureSignUpDTO), HttpStatus.OK);
+    }
+
+    @GetMapping("/organizer")
+    @ResponseStatus(HttpStatus.OK)
+    public List<LectureDetailsWithUser> getLectureDetails(){
+
+        return lectureService.getLecturesWithUser();
+    }
+
 
     /**
      * Endpoint for method POST http://localhost:8080/users/sign-up-register

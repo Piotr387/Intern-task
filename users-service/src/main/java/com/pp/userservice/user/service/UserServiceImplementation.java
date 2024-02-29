@@ -10,6 +10,7 @@ import com.pp.messages.EmailSignUpConfirmationRequest;
 import com.pp.userservice.lecture.LectureEntity;
 import com.pp.userservice.lecture.dto.LectureDTO;
 import com.pp.userservice.lecture.dto.LectureSignUpDTO;
+import com.pp.userservice.lecture.dto.LectureWithFirstRegistration;
 import com.pp.userservice.lecture.service.LectureService;
 import com.pp.userservice.responde.ErrorMessages;
 import com.pp.userservice.responde.OperationStatusModel;
@@ -19,6 +20,7 @@ import com.pp.userservice.role.RoleEntity;
 import com.pp.userservice.role.RoleService;
 import com.pp.userservice.user.UserDTO;
 import com.pp.userservice.user.UserEntity;
+import com.pp.userservice.user.UserFirstRegistration;
 import com.pp.userservice.user.UserRepository;
 import com.pp.userservice.utils.Utilities;
 
@@ -109,6 +111,33 @@ public class UserServiceImplementation implements UserService, UserDetailsServic
         UserEntity userEntity = createUser(lectureSignUpDTO.getUserDTO());
         addRoleToUser(userEntity, "ROLE_USER");
         return signUpForLecture(userEntity, lectureSignUpDTO.getLectureName());
+    }
+
+    @Override
+    public OperationStatusModel signUp(LectureWithFirstRegistration lectureSignUpDTO) {
+        userRepository.findByLogin(lectureSignUpDTO.userDTO().login()).ifPresent(user -> {
+            if (!user.getEmail().equals(lectureSignUpDTO.userDTO().email()))
+                throw new UserServiceException(ErrorMessages.LOGIN_ALREADY_TAKEN.getErrorMessage());
+            throw new UserServiceException(ErrorMessages.ACCOUNT_ALREADY_REGISTER.getErrorMessage());
+        });
+        userRepository.findByEmail(lectureSignUpDTO.userDTO().email()).ifPresent(user -> {
+            throw new UserServiceException(ErrorMessages.EMAIL_ALREADY_TAKEN.getErrorMessage());
+        });
+        UserEntity userEntity = createUser(lectureSignUpDTO.userDTO());
+        addRoleToUser(userEntity, "ROLE_USER");
+        return signUpForLecture(userEntity, lectureSignUpDTO.lectureName());
+    }
+
+
+    @Transactional(rollbackOn = Exception.class)
+    public UserEntity createUser(UserFirstRegistration userFirstRegistration) {
+        if (!utilities.patternMatches(userFirstRegistration.login(), utilities.getUsernameRegexPattern()))
+            throw new UserServiceException(ErrorMessages.LOGIN_MISS_PATTERN.getErrorMessage());
+        if (!utilities.patternMatches(userFirstRegistration.email(), utilities.getEmailRegexPattern()))
+            throw new UserServiceException(ErrorMessages.EMAIL_MISS_PATTERN.getErrorMessage());
+
+        UserDTO userDTO = new UserDTO(userFirstRegistration.login(), userFirstRegistration.email());
+        return createUserWithPassword(userDTO, userFirstRegistration.password());
     }
 
     @Override

@@ -3,6 +3,7 @@ package com.pp.userservice.lecture.service;
 import com.pp.userservice.lecture.LectureEntity;
 import com.pp.userservice.lecture.dto.LectureDTO;
 import com.pp.userservice.lecture.dto.LectureDetailsDTO;
+import com.pp.userservice.lecture.dto.LectureDetailsWithUser;
 import com.pp.userservice.lecture.dto.LectureStatisticsDAO;
 import com.pp.userservice.lecture.dto.LectureThematicStatisticDAO;
 
@@ -17,6 +18,7 @@ import java.util.List;
  */
 
 public interface LectureService {
+     List<LectureDetailsWithUser> getLecturesWithUser();
     /**
      * @return all lectures stored in database.
      */
