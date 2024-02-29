@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.io.IOException;
 import java.util.List;
 
@@ -86,7 +87,7 @@ public class UserController {
     }
 
     @PostMapping(path = "/v2/sign-up")
-    public ResponseEntity<OperationStatusModel> signUpUserForLecture(@RequestBody LectureWithFirstRegistration lectureSignUpDTO) {
+    public ResponseEntity<OperationStatusModel> signUpUserForLecture(@Valid @RequestBody LectureWithFirstRegistration lectureSignUpDTO) {
         return new ResponseEntity<>(userService.signUp(lectureSignUpDTO), HttpStatus.OK);
     }
 
