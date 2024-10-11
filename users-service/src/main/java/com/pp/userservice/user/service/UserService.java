@@ -3,7 +3,7 @@ package com.pp.userservice.user.service;
 import com.pp.userservice.lecture.dto.LectureDTO;
 import com.pp.userservice.lecture.dto.LectureSignUpDTO;
 import com.pp.userservice.lecture.dto.LectureWithFirstRegistration;
-import com.pp.userservice.responde.OperationStatusModel;
+import com.pp.userservice.response.OperationStatusModel;
 import com.pp.userservice.user.UserDTO;
 import com.pp.userservice.user.UserEntity;
 
@@ -19,7 +19,7 @@ import java.util.List;
  * The only thing we will have to do is to add new class that will implements this interface
  * and override method with its own "body" implementation
  */
-
+// start L1 bridge
 public interface UserService {
     List<UserDTO> getUsers();
 

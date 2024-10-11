@@ -1,4 +1,4 @@
-package com.pp.userservice.responde;
+package com.pp.userservice.response;
 
 public enum RequestOperationStatus {
     ERROR, SUCCESS

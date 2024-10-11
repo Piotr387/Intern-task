@@ -1,17 +1,26 @@
 package com.pp.userservice.user;
 
+import com.pp.userservice.common.HistoryEntityListener;
+import com.pp.userservice.common.HistoryFieldsEntityTracker;
 import com.pp.userservice.lecture.LectureEntity;
 import com.pp.userservice.role.RoleEntity;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
-import javax.persistence.*;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import static javax.persistence.GenerationType.IDENTITY;
 
 /**
@@ -23,7 +32,8 @@ import static javax.persistence.GenerationType.IDENTITY;
 @Getter
 @Setter
 @NoArgsConstructor
-public class UserEntity implements Serializable {
+@EntityListeners(HistoryEntityListener.class)
+public class UserEntity extends HistoryFieldsEntityTracker<UserEntity> {
     @Serial
     private static final long serialVersionUID = 4928574404969965424L;
     @Id

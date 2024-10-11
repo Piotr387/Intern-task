@@ -1,5 +1,6 @@
-package com.pp.userservice.responde;
+package com.pp.userservice.response;
 
+// start L1 Builder
 public class OperationStatusModel {
     private final String operationResult;
     private final String operationName;
@@ -13,17 +14,17 @@ public class OperationStatusModel {
             this.operationName = operationName;
         }
 
-        public Builder operationResult(String operationResult){
+        public Builder operationResult(String operationResult) {
             this.operationResult = operationResult;
             return this;
         }
 
-        public OperationStatusModel build(){
+        public OperationStatusModel build() {
             return new OperationStatusModel(this);
         }
     }
 
-    private OperationStatusModel(Builder builder){
+    private OperationStatusModel(Builder builder) {
         this.operationResult = builder.operationResult;
         this.operationName = builder.operationName;
     }
