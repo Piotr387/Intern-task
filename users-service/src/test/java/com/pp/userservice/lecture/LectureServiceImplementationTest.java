@@ -1,26 +1,28 @@
-package com.pp.userservice.lecture.service;
+package com.pp.userservice.lecture;
 
-import com.pp.userservice.lecture.LectureEntity;
-import com.pp.userservice.lecture.LectureRepository;
 import com.pp.userservice.lecture.dto.LectureDTO;
 import com.pp.userservice.lecture.dto.LectureStatisticsDAO;
 import com.pp.userservice.lecture.dto.LectureThematicStatisticDAO;
+import com.pp.userservice.lecture.service.LectureServiceImplementation;
 import com.pp.userservice.response.UserServiceException;
 import com.pp.userservice.role.RoleEntity;
 import com.pp.userservice.role.RoleService;
-import com.pp.userservice.user.UserEntity;
-import com.pp.userservice.user.UserRepository;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
-import org.modelmapper.ModelMapper;
-
+import com.pp.userservice.user.entity.UserEntity;
+import com.pp.userservice.user.service.UserService;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.modelmapper.ModelMapper;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
@@ -30,7 +32,7 @@ class LectureServiceImplementationTest {
 
     private static LectureServiceImplementation lectureServiceImplementation;
     private static LectureRepository lectureRepository;
-    private static UserRepository userRepository;
+    private static UserService userService;
     private static RoleService roleService;
 
     private static RoleEntity roleUser;
@@ -39,9 +41,9 @@ class LectureServiceImplementationTest {
     @BeforeAll
     public static void setUp() {
         lectureRepository = mock(LectureRepository.class);
-        userRepository = mock(UserRepository.class);
+        userService = mock(UserService.class);
         roleService = mock(RoleService.class);
-        lectureServiceImplementation = new LectureServiceImplementation(lectureRepository, userRepository, roleService);
+        lectureServiceImplementation = new LectureServiceImplementation(lectureRepository, userService, roleService);
         roleUser = new RoleEntity("ROLE_USER");
         roleOrganizer = new RoleEntity("ROLE_ORGANIZER");
     }
@@ -95,7 +97,7 @@ class LectureServiceImplementationTest {
     void getLecturesByUserLoginIfFoundUser() {
         UserEntity userEntity = new UserEntity();
         userEntity.setLectureEntityList(getLecturesEntity());
-        when(userRepository.findByLogin(anyString())).thenReturn(Optional.of(userEntity));
+        when(userService.findUserByLogin(anyString())).thenReturn(Optional.of(userEntity));
 
         List<LectureDTO> lectureDTOList = lectureServiceImplementation.getLecturesByUserLogin(anyString());
 
@@ -107,14 +109,14 @@ class LectureServiceImplementationTest {
 
     @Test
     void getLecturesByUserLoginIfNotFoundUser() {
-        when(userRepository.findByLogin(anyString())).thenReturn(Optional.empty());
+        when(userService.findUserByLogin(anyString())).thenReturn(Optional.empty());
         assertThrows(UserServiceException.class, () -> lectureServiceImplementation.findByName(any()));
     }
 
     @Test
     void getLecturesByPopularity() {
         when(roleService.findByName(anyString())).thenReturn(roleUser);
-        when(userRepository.findAll()).thenReturn(getUsers());
+        when(userService.findAllUsers()).thenReturn(getUsers());
 
         List<LectureEntity> lectureEntityList = getLecturesEntity();
 
@@ -162,12 +164,10 @@ class LectureServiceImplementationTest {
                 new UserEntity("LoginTest2", "test2@gmail.com", "test2"),
                 new UserEntity("LoginTest3", "test3@gmail.com", "test3")
         ));
-        userEntityList.forEach(userEntity -> {
-            userEntity.setRoles(new ArrayList<>(Arrays.asList(roleUser)));
-        });
+        userEntityList.forEach(userEntity -> userEntity.setRoles(new ArrayList<>(Collections.singletonList(roleUser))));
 
         UserEntity user = new UserEntity("LoginTest4", "test4@gmail.com", "test4");
-        user.setRoles(new ArrayList<>(Arrays.asList(roleOrganizer)));
+        user.setRoles(new ArrayList<>(Collections.singletonList(roleOrganizer)));
         userEntityList.add(user);
         return userEntityList;
     }

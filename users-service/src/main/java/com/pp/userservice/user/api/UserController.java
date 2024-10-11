@@ -1,4 +1,4 @@
-package com.pp.userservice.user;
+package com.pp.userservice.user.api;
 
 import com.pp.userservice.lecture.dto.LectureDTO;
 import com.pp.userservice.lecture.dto.LectureDetailsWithUser;
@@ -21,7 +21,7 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.util.List;
 
-import static com.pp.userservice.user.UserController.USERS_ENDPOINT;
+import static com.pp.userservice.user.api.UserController.USERS_ENDPOINT;
 
 @RestController
 @RequestMapping(value = USERS_ENDPOINT)

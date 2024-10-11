@@ -18,6 +18,8 @@ import com.pp.userservice.lecture.dto.LectureSignUpDTO;
 import com.pp.userservice.response.ErrorMessages;
 import com.pp.userservice.response.OperationStatusModel;
 import com.pp.userservice.response.RequestOperationName;
+import com.pp.userservice.user.api.UserController;
+import com.pp.userservice.user.api.UserDTO;
 import com.pp.userservice.utils.Utilities;
 
 import java.util.Arrays;

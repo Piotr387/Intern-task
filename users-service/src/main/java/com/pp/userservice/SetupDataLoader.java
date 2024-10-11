@@ -4,16 +4,13 @@ import com.pp.userservice.lecture.LectureEntity;
 import com.pp.userservice.lecture.LectureRepository;
 import com.pp.userservice.lecture.dto.LectureSignUpDTO;
 import com.pp.userservice.role.RoleService;
-import com.pp.userservice.user.UserDTO;
-import com.pp.userservice.user.UserEntity;
-import com.pp.userservice.user.UserRepository;
+import com.pp.userservice.user.api.UserDTO;
+import com.pp.userservice.user.entity.UserEntity;
 import com.pp.userservice.user.service.UserService;
-
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -26,7 +23,6 @@ class SetupDataLoader implements CommandLineRunner {
   boolean alreadySetup = true;
 
   private final UserService userService;
-  private final UserRepository userRepository;
   private final LectureRepository lectureRepository;
   private final RoleService roleService;
 
@@ -80,7 +76,7 @@ class SetupDataLoader implements CommandLineRunner {
         new LectureSignUpDTO("Lecture 2 at 14:00", new UserDTO("username6", "mail6@mail.com")), //
         new LectureSignUpDTO("Lecture 2 at 14:00", new UserDTO("username7", "mail7@mail.com")), //
         new LectureSignUpDTO("Lecture 2 at 14:00", new UserDTO("username8", "mail8@mail.com"))));
-    userList.forEach(user -> userRepository.findByLogin(user.getUserDTO()
+    userList.forEach(user -> userService.findUserByLogin(user.getUserDTO()
         .getLogin())
         .ifPresentOrElse(userEntity -> userService.signUpForLecture(userEntity, user.getLectureName()), () -> userService.signUp(user)));
 
@@ -92,12 +88,12 @@ class SetupDataLoader implements CommandLineRunner {
     UserEntity userOrganizator = userService.createUserWithPassword(new UserDTO("organizator1", "organizator1@gmail.com"), "organizator1");
     userOrganizator.getRoles()
         .add(roleService.findByName("ROLE_ORGANIZER"));
-    userRepository.save(userOrganizator);
+    userService.saveUser(userOrganizator);
 
     UserEntity userTest = userService.createUserWithPassword(new UserDTO("test", "test@gmail.com"), "test");
     userTest.getRoles()
         .add(roleService.findByName("ROLE_USER"));
-    userRepository.save(userTest);
+    userService.saveUser(userTest);
 
     alreadySetup = true;
   }

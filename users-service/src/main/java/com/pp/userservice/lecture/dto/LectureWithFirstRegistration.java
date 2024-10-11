@@ -1,6 +1,6 @@
 package com.pp.userservice.lecture.dto;
 
-import com.pp.userservice.user.UserFirstRegistration;
+import com.pp.userservice.user.api.UserFirstRegistration;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;

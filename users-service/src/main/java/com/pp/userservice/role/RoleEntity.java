@@ -1,6 +1,6 @@
 package com.pp.userservice.role;
 
-import com.pp.userservice.user.UserEntity;
+import com.pp.userservice.user.entity.UserEntity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

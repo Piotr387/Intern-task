@@ -1,4 +1,4 @@
-package com.pp.userservice.user.service;
+package com.pp.userservice.user;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -18,15 +18,16 @@ import com.pp.userservice.response.RequestOperationName;
 import com.pp.userservice.response.UserServiceException;
 import com.pp.userservice.role.RoleEntity;
 import com.pp.userservice.role.RoleService;
-import com.pp.userservice.user.UserDTO;
-import com.pp.userservice.user.UserEntity;
-import com.pp.userservice.user.UserFirstRegistration;
-import com.pp.userservice.user.UserRepository;
+import com.pp.userservice.user.api.UserDTO;
+import com.pp.userservice.user.api.UserFirstRegistration;
+import com.pp.userservice.user.entity.UserEntity;
+import com.pp.userservice.user.service.UserService;
 import com.pp.userservice.utils.Utilities;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
@@ -173,7 +174,6 @@ public class UserServiceImplementation implements UserService, UserDetailsServic
         );
 
 
-
         return new OperationStatusModel.Builder(RequestOperationName.SIGN_UP_FOR_LECTURE.name()).build();
     }
 
@@ -228,9 +228,22 @@ public class UserServiceImplementation implements UserService, UserDetailsServic
 
     @Override
     public UserEntity getUser(String login) {
-        return userRepository.findByLogin(login).orElseThrow(() -> {
-            throw new UserServiceException(ErrorMessages.NO_USER_FOUND_WITH_PROVIDED_LOGIN.getErrorMessage());
-        });
+        return findUserByLogin(login).orElseThrow(() -> new UserServiceException(ErrorMessages.NO_USER_FOUND_WITH_PROVIDED_LOGIN.getErrorMessage()));
+    }
+
+    @Override
+    public Optional<UserEntity> findUserByLogin(String login) {
+        return userRepository.findByLogin(login);
+    }
+
+    @Override
+    public void saveUser(UserEntity userEntity) {
+        userRepository.save(userEntity);
+    }
+
+    @Override
+    public List<UserEntity> findAllUsers() {
+        return userRepository.findAll();
     }
 
     @Override

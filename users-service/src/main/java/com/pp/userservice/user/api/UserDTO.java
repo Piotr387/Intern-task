@@ -1,4 +1,4 @@
-package com.pp.userservice.user;
+package com.pp.userservice.user.api;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.pp.userservice.lecture.dto.LectureDTO;

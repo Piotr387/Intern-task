@@ -1,11 +1,10 @@
-package com.pp.userservice.user;
+package com.pp.userservice.user.entity;
 
 import com.pp.userservice.common.HistoryEntityListener;
 import com.pp.userservice.common.HistoryFieldsEntityTracker;
 import com.pp.userservice.lecture.LectureEntity;
 import com.pp.userservice.role.RoleEntity;
 import java.io.Serial;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;

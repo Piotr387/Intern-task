@@ -1,6 +1,6 @@
 package com.pp.userservice.lecture.dto;
 
-import com.pp.userservice.user.UserLoginWithEmail;
+import com.pp.userservice.user.api.UserLoginWithEmail;
 
 import java.util.List;
 
