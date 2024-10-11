@@ -1,6 +1,6 @@
 package com.pp.userservice.user;
 
-import static com.pp.userservice.responde.ErrorMessages.*;
+import static com.pp.userservice.response.ErrorMessages.*;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -15,9 +15,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pp.amqp.RabbitMQMessageProducer;
 import com.pp.userservice.IntegrationBaseTest;
 import com.pp.userservice.lecture.dto.LectureSignUpDTO;
-import com.pp.userservice.responde.ErrorMessages;
-import com.pp.userservice.responde.OperationStatusModel;
-import com.pp.userservice.responde.RequestOperationName;
+import com.pp.userservice.response.ErrorMessages;
+import com.pp.userservice.response.OperationStatusModel;
+import com.pp.userservice.response.RequestOperationName;
+import com.pp.userservice.user.api.UserController;
+import com.pp.userservice.user.api.UserDTO;
 import com.pp.userservice.utils.Utilities;
 
 import java.util.Arrays;

@@ -1,4 +1,4 @@
-package com.pp.userservice.user.service;
+package com.pp.userservice.user;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -12,21 +12,23 @@ import com.pp.userservice.lecture.dto.LectureDTO;
 import com.pp.userservice.lecture.dto.LectureSignUpDTO;
 import com.pp.userservice.lecture.dto.LectureWithFirstRegistration;
 import com.pp.userservice.lecture.service.LectureService;
-import com.pp.userservice.responde.ErrorMessages;
-import com.pp.userservice.responde.OperationStatusModel;
-import com.pp.userservice.responde.RequestOperationName;
-import com.pp.userservice.responde.UserServiceException;
+import com.pp.userservice.notification.NotificationService;
+import com.pp.userservice.response.ErrorMessages;
+import com.pp.userservice.response.OperationStatusModel;
+import com.pp.userservice.response.RequestOperationName;
+import com.pp.userservice.response.UserServiceException;
 import com.pp.userservice.role.RoleEntity;
 import com.pp.userservice.role.RoleService;
-import com.pp.userservice.user.UserDTO;
-import com.pp.userservice.user.UserEntity;
-import com.pp.userservice.user.UserFirstRegistration;
-import com.pp.userservice.user.UserRepository;
+import com.pp.userservice.user.api.UserDTO;
+import com.pp.userservice.user.api.UserFirstRegistration;
+import com.pp.userservice.user.entity.UserEntity;
+import com.pp.userservice.user.service.UserService;
 import com.pp.userservice.utils.Utilities;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
@@ -41,6 +43,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+// start L1 Proxy - by making UserRepository package-private we're forcing to use UserServiceImplementation to get any data
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -52,6 +55,7 @@ public class UserServiceImplementation implements UserService, UserDetailsServic
     private final RoleService roleService;
     private final LectureService lectureService;
     private final RabbitMQMessageProducer rabbitMQMessageProducer;
+    private final NotificationService notificationService;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -166,12 +170,14 @@ public class UserServiceImplementation implements UserService, UserDetailsServic
         UserEntity user = signUpTransaction(lectureEntity, userEntity);
         if (user == null)
             throw new UserServiceException(ErrorMessages.SOMETHING_WENT_WRONG.getErrorMessage());
+
+        var payload = new EmailSignUpConfirmationRequest(user.getLogin(), user.getEmail(), lectureName, lectureEntity.getStartTime().toString());
         rabbitMQMessageProducer.publish( //
-                new EmailSignUpConfirmationRequest(user.getLogin(), user.getEmail(), lectureName, lectureEntity.getStartTime().toString()), //
+                payload, //
                 "internal.exchange", //
                 "internal.email.routing-key" //
         );
-
+        notificationService.sendNotification(userEntity, payload.toString());
 
 
         return new OperationStatusModel.Builder(RequestOperationName.SIGN_UP_FOR_LECTURE.name()).build();
@@ -228,9 +234,22 @@ public class UserServiceImplementation implements UserService, UserDetailsServic
 
     @Override
     public UserEntity getUser(String login) {
-        return userRepository.findByLogin(login).orElseThrow(() -> {
-            throw new UserServiceException(ErrorMessages.NO_USER_FOUND_WITH_PROVIDED_LOGIN.getErrorMessage());
-        });
+        return findUserByLogin(login).orElseThrow(() -> new UserServiceException(ErrorMessages.NO_USER_FOUND_WITH_PROVIDED_LOGIN.getErrorMessage()));
+    }
+
+    @Override
+    public Optional<UserEntity> findUserByLogin(String login) {
+        return userRepository.findByLogin(login);
+    }
+
+    @Override
+    public void saveUser(UserEntity userEntity) {
+        userRepository.save(userEntity);
+    }
+
+    @Override
+    public List<UserEntity> findAllUsers() {
+        return userRepository.findAll();
     }
 
     @Override

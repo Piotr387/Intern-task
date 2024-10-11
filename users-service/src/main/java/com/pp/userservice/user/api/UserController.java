@@ -1,4 +1,4 @@
-package com.pp.userservice.user;
+package com.pp.userservice.user.api;
 
 import com.pp.userservice.lecture.dto.LectureDTO;
 import com.pp.userservice.lecture.dto.LectureDetailsWithUser;
@@ -7,8 +7,8 @@ import com.pp.userservice.lecture.dto.LectureStatisticsDAO;
 import com.pp.userservice.lecture.dto.LectureThematicStatisticDAO;
 import com.pp.userservice.lecture.dto.LectureWithFirstRegistration;
 import com.pp.userservice.lecture.service.LectureService;
-import com.pp.userservice.responde.OperationStatusModel;
-import com.pp.userservice.responde.RequestOperationName;
+import com.pp.userservice.response.OperationStatusModel;
+import com.pp.userservice.response.RequestOperationName;
 import com.pp.userservice.user.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,14 +21,14 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.util.List;
 
-import static com.pp.userservice.user.UserController.USERS_ENDPOINT;
+import static com.pp.userservice.user.api.UserController.USERS_ENDPOINT;
 
 @RestController
 @RequestMapping(value = USERS_ENDPOINT)
 @AllArgsConstructor
 public class UserController {
 
-    static final String USERS_ENDPOINT = "/users";
+    public static final String USERS_ENDPOINT = "/users";
     private final LectureService lectureService;
     private final UserService userService;
 

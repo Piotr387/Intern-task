@@ -1,6 +1,6 @@
 package com.pp.userservice.lecture.dto;
 
-import com.pp.userservice.user.UserDTO;
+import com.pp.userservice.user.api.UserDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

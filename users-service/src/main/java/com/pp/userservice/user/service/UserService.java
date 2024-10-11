@@ -3,10 +3,12 @@ package com.pp.userservice.user.service;
 import com.pp.userservice.lecture.dto.LectureDTO;
 import com.pp.userservice.lecture.dto.LectureSignUpDTO;
 import com.pp.userservice.lecture.dto.LectureWithFirstRegistration;
-import com.pp.userservice.responde.OperationStatusModel;
-import com.pp.userservice.user.UserDTO;
-import com.pp.userservice.user.UserEntity;
+import com.pp.userservice.response.OperationStatusModel;
+import com.pp.userservice.role.RoleEntity;
+import com.pp.userservice.user.api.UserDTO;
+import com.pp.userservice.user.entity.UserEntity;
 
+import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -19,7 +21,7 @@ import java.util.List;
  * The only thing we will have to do is to add new class that will implements this interface
  * and override method with its own "body" implementation
  */
-
+// start L1 bridge
 public interface UserService {
     List<UserDTO> getUsers();
 
@@ -40,6 +42,7 @@ public interface UserService {
     void addRoleToUser(UserEntity userEntity, String roleName);
 
     UserEntity getUser(String login);
+    Optional<UserEntity> findUserByLogin(String login);
 
     void getRefreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException;
 
@@ -48,4 +51,8 @@ public interface UserService {
     UserDTO getUserAccountDetails(HttpServletRequest request);
 
     OperationStatusModel signUp(LectureWithFirstRegistration lectureSignUpDTO);
+
+    void saveUser(UserEntity userTest);
+
+    List<UserEntity> findAllUsers();
 }

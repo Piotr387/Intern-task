@@ -8,29 +8,28 @@ import com.pp.userservice.lecture.dto.LectureDetailsDTO;
 import com.pp.userservice.lecture.dto.LectureDetailsWithUser;
 import com.pp.userservice.lecture.dto.LectureStatisticsDAO;
 import com.pp.userservice.lecture.dto.LectureThematicStatisticDAO;
-import com.pp.userservice.responde.ErrorMessages;
-import com.pp.userservice.responde.UserServiceException;
+import com.pp.userservice.response.ErrorMessages;
+import com.pp.userservice.response.UserServiceException;
 import com.pp.userservice.role.RoleEntity;
 import com.pp.userservice.role.RoleService;
-import com.pp.userservice.user.UserEntity;
-import com.pp.userservice.user.UserLoginWithEmail;
-import com.pp.userservice.user.UserRepository;
-import lombok.AllArgsConstructor;
-import org.modelmapper.ModelMapper;
-import org.springframework.stereotype.Service;
-
+import com.pp.userservice.user.api.UserLoginWithEmail;
+import com.pp.userservice.user.entity.UserEntity;
+import com.pp.userservice.user.service.UserService;
 import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import lombok.AllArgsConstructor;
+import org.modelmapper.ModelMapper;
+import org.springframework.stereotype.Service;
 
 @Service
 @AllArgsConstructor
 public class LectureServiceImplementation implements LectureService {
 
     private final LectureRepository lectureRepository;
-    private final UserRepository userRepository;
+    private final UserService userService;
     private final RoleService roleService;
 
     public List<LectureDTO> getLectures() {
@@ -61,9 +60,7 @@ public class LectureServiceImplementation implements LectureService {
 
     @Override
     public LectureEntity findByName(String name) {
-        return lectureRepository.findByName(name).orElseThrow(() -> {
-            throw new UserServiceException(ErrorMessages.LECTURE_NOT_FOUND_BY_NAME.getErrorMessage());
-        });
+        return lectureRepository.findByName(name).orElseThrow(() -> new UserServiceException(ErrorMessages.LECTURE_NOT_FOUND_BY_NAME.getErrorMessage()));
     }
 
     @Override
@@ -80,9 +77,7 @@ public class LectureServiceImplementation implements LectureService {
 
     @Override
     public List<LectureDTO> getLecturesByUserLogin(String login) {
-        UserEntity userEntity = userRepository.findByLogin(login).orElseThrow(() -> {
-            throw new UserServiceException(ErrorMessages.NO_USER_FOUND_WITH_PROVIDED_LOGIN.getErrorMessage());
-        });
+        UserEntity userEntity = userService.findUserByLogin(login).orElseThrow(() -> new UserServiceException(ErrorMessages.NO_USER_FOUND_WITH_PROVIDED_LOGIN.getErrorMessage()));
 
         return userEntity.getLectureEntityList().stream()
                 .map(entity -> new ModelMapper().map(entity, LectureDTO.class))
@@ -94,7 +89,7 @@ public class LectureServiceImplementation implements LectureService {
 
         RoleEntity roleEntity = roleService.findByName("ROLE_USER");
 
-        long listCount = userRepository.findAll().stream()
+        long listCount = userService.findAllUsers().stream()
                 .filter(user -> user.getRoles().contains(roleEntity))
                 .count();
 
@@ -121,7 +116,7 @@ public class LectureServiceImplementation implements LectureService {
                 .collect(Collectors.toMap(
                         LectureEntity::getThematicPath,
                         LectureEntity::getUserEntityListSize,
-                        (previousValue, nextValue) -> previousValue + nextValue));
+                        Integer::sum));
         //Sum all above integers
         int allBusySeats = mapList.values().stream().reduce(0, Integer::sum);
 

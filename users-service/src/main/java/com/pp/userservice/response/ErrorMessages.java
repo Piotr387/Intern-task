@@ -1,4 +1,4 @@
-package com.pp.userservice.responde;
+package com.pp.userservice.response;
 
 public enum ErrorMessages {
     ERROR_WRITING_FILE("There was an error writing to file"),

@@ -1,4 +1,4 @@
-package com.pp.userservice.user;
+package com.pp.userservice.user.api;
 
 
 public record UserLoginWithEmail(

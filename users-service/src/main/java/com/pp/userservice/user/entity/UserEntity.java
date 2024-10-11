@@ -1,17 +1,27 @@
-package com.pp.userservice.user;
+package com.pp.userservice.user.entity;
 
+import com.pp.userservice.common.HistoryEntityListener;
+import com.pp.userservice.common.HistoryFieldsEntityTracker;
 import com.pp.userservice.lecture.LectureEntity;
 import com.pp.userservice.role.RoleEntity;
+import java.io.Serial;
+import java.util.ArrayList;
+import java.util.List;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Convert;
+import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.Transient;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import javax.persistence.*;
-import java.io.Serial;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-
 import static javax.persistence.GenerationType.IDENTITY;
 
 /**
@@ -23,7 +33,8 @@ import static javax.persistence.GenerationType.IDENTITY;
 @Getter
 @Setter
 @NoArgsConstructor
-public class UserEntity implements Serializable {
+@EntityListeners(HistoryEntityListener.class)
+public class UserEntity extends HistoryFieldsEntityTracker<UserEntity> {
     @Serial
     private static final long serialVersionUID = 4928574404969965424L;
     @Id
@@ -50,6 +61,13 @@ public class UserEntity implements Serializable {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private List<RoleEntity> roles = new ArrayList<>();
+
+    @Column(name = "FACEBOOK_NOTIFICATION")
+    private boolean facebookNotification;
+    @Column(name = "SMS_NOTIFICATION")
+    private boolean SMSNotification;
+    @Column(name = "SLACK_NOTIFICATION")
+    private boolean SlackNotification;
 
     public UserEntity(String login, String email) {
         this(login, email, "123");

@@ -1,7 +1,7 @@
 package com.pp.userservice.role;
 
-import com.pp.userservice.responde.ErrorMessages;
-import com.pp.userservice.responde.UserServiceException;
+import com.pp.userservice.response.ErrorMessages;
+import com.pp.userservice.response.UserServiceException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

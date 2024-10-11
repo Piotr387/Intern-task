@@ -1,4 +1,4 @@
-package com.pp.userservice.user;
+package com.pp.userservice.user.api;
 
 
 import javax.validation.constraints.Min;
