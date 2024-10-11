@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.FetchType;
@@ -17,6 +18,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.Transient;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -59,6 +61,13 @@ public class UserEntity extends HistoryFieldsEntityTracker<UserEntity> {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private List<RoleEntity> roles = new ArrayList<>();
+
+    @Column(name = "FACEBOOK_NOTIFICATION")
+    private boolean facebookNotification;
+    @Column(name = "SMS_NOTIFICATION")
+    private boolean SMSNotification;
+    @Column(name = "SLACK_NOTIFICATION")
+    private boolean SlackNotification;
 
     public UserEntity(String login, String email) {
         this(login, email, "123");

@@ -12,6 +12,7 @@ import com.pp.userservice.lecture.dto.LectureDTO;
 import com.pp.userservice.lecture.dto.LectureSignUpDTO;
 import com.pp.userservice.lecture.dto.LectureWithFirstRegistration;
 import com.pp.userservice.lecture.service.LectureService;
+import com.pp.userservice.notification.NotificationService;
 import com.pp.userservice.response.ErrorMessages;
 import com.pp.userservice.response.OperationStatusModel;
 import com.pp.userservice.response.RequestOperationName;
@@ -42,6 +43,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+// start L1 Proxy - by making UserRepository package-private we're forcing to use UserServiceImplementation to get any data
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -53,6 +55,7 @@ public class UserServiceImplementation implements UserService, UserDetailsServic
     private final RoleService roleService;
     private final LectureService lectureService;
     private final RabbitMQMessageProducer rabbitMQMessageProducer;
+    private final NotificationService notificationService;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -167,11 +170,14 @@ public class UserServiceImplementation implements UserService, UserDetailsServic
         UserEntity user = signUpTransaction(lectureEntity, userEntity);
         if (user == null)
             throw new UserServiceException(ErrorMessages.SOMETHING_WENT_WRONG.getErrorMessage());
+
+        var payload = new EmailSignUpConfirmationRequest(user.getLogin(), user.getEmail(), lectureName, lectureEntity.getStartTime().toString());
         rabbitMQMessageProducer.publish( //
-                new EmailSignUpConfirmationRequest(user.getLogin(), user.getEmail(), lectureName, lectureEntity.getStartTime().toString()), //
+                payload, //
                 "internal.exchange", //
                 "internal.email.routing-key" //
         );
+        notificationService.sendNotification(userEntity, payload.toString());
 
 
         return new OperationStatusModel.Builder(RequestOperationName.SIGN_UP_FOR_LECTURE.name()).build();

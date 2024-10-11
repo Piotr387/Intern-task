@@ -28,7 +28,7 @@ import static com.pp.userservice.user.api.UserController.USERS_ENDPOINT;
 @AllArgsConstructor
 public class UserController {
 
-    static final String USERS_ENDPOINT = "/users";
+    public static final String USERS_ENDPOINT = "/users";
     private final LectureService lectureService;
     private final UserService userService;
 

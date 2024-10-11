@@ -13,7 +13,7 @@ import org.apache.commons.lang.SerializationUtils;
 public class HistoryFieldsEntityTracker<CloneableEntity> implements Serializable {
 
     @Transient
-    public CloneableEntity previousState;
+    private CloneableEntity previousState;
 
     // start L1 Prototype
 
