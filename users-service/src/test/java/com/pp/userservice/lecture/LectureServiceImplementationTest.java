@@ -43,7 +43,7 @@ class LectureServiceImplementationTest {
         lectureRepository = mock(LectureRepository.class);
         userService = mock(UserService.class);
         roleService = mock(RoleService.class);
-        lectureServiceImplementation = new LectureServiceImplementation(lectureRepository, userService, roleService);
+        lectureServiceImplementation = new LectureServiceImplementation(lectureRepository, roleService);
         roleUser = new RoleEntity("ROLE_USER");
         roleOrganizer = new RoleEntity("ROLE_ORGANIZER");
     }
@@ -95,14 +95,20 @@ class LectureServiceImplementationTest {
 
     @Test
     void getLecturesByUserLoginIfFoundUser() {
-        UserEntity userEntity = new UserEntity();
-        userEntity.setLectureEntityList(getLecturesEntity());
-        when(userService.findUserByLogin(anyString())).thenReturn(Optional.of(userEntity));
 
-        List<LectureDTO> lectureDTOList = lectureServiceImplementation.getLecturesByUserLogin(anyString());
+        // given
+        var lectures = getLecturesEntity();
+        UserEntity searchedUser = new UserEntity("login", "email");
+        searchedUser.setLectureEntityList(lectures);
+        lectures.forEach(lecture -> lecture.getUserEntityList().add(searchedUser));
+        when(lectureRepository.findAll()).thenReturn(getLecturesEntity());
 
+        // when
+        List<LectureDTO> lectureDTOList = lectureServiceImplementation.getLecturesByUserLogin(searchedUser.getLogin());
+
+        // then
         assertNotNull(lectureDTOList);
-        assertEquals(lectureDTOList, userEntity.getLectureEntityList().stream()
+        assertEquals(lectureDTOList, getLecturesEntity().stream()
                 .map(lectureEntity -> new ModelMapper().map(lectureEntity, LectureDTO.class))
                 .toList());
     }

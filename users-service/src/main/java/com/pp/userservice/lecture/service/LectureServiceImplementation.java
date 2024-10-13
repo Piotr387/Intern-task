@@ -16,9 +16,11 @@ import com.pp.userservice.user.api.UserLoginWithEmail;
 import com.pp.userservice.user.entity.UserEntity;
 import com.pp.userservice.user.service.UserService;
 import java.time.format.DateTimeFormatter;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -29,7 +31,6 @@ import org.springframework.stereotype.Service;
 public class LectureServiceImplementation implements LectureService {
 
     private final LectureRepository lectureRepository;
-    private final UserService userService;
     private final RoleService roleService;
 
     public List<LectureDTO> getLectures() {
@@ -77,9 +78,10 @@ public class LectureServiceImplementation implements LectureService {
 
     @Override
     public List<LectureDTO> getLecturesByUserLogin(String login) {
-        UserEntity userEntity = userService.findUserByLogin(login).orElseThrow(() -> new UserServiceException(ErrorMessages.NO_USER_FOUND_WITH_PROVIDED_LOGIN.getErrorMessage()));
 
-        return userEntity.getLectureEntityList().stream()
+        Predicate<LectureEntity> hasLectureSignedUserWithSearchedLogin = lectureEntity -> lectureEntity.getUserEntityList().stream().anyMatch(user -> login.equals(user.getLogin()));
+
+        return lectureRepository.findAll().stream().filter(Predicate.not(hasLectureSignedUserWithSearchedLogin))
                 .map(entity -> new ModelMapper().map(entity, LectureDTO.class))
                 .toList();
     }
@@ -89,15 +91,20 @@ public class LectureServiceImplementation implements LectureService {
 
         RoleEntity roleEntity = roleService.findByName("ROLE_USER");
 
-        long listCount = userService.findAllUsers().stream()
+        var lectures = lectureRepository.findAll();
+
+        var totalUserCount = lectures.stream()
+                .map(LectureEntity::getUserEntityList)
+                .flatMap(Collection::stream)
+                .distinct()
                 .filter(user -> user.getRoles().contains(roleEntity))
                 .count();
 
-        return lectureRepository.findAll().stream()
+        return lectures.stream()
                 .map(lecture ->
                         new LectureStatisticsDAO(
                                 lecture,
-                                listCount))
+                                totalUserCount))
                 .sorted(
                         Comparator.comparing(LectureStatisticsDAO::getBusySeatsOverAllUsers).reversed()
                                 .thenComparing(LectureStatisticsDAO::getSeatTaken)
