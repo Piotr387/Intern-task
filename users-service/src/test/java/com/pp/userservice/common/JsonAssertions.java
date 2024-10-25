@@ -1,4 +1,4 @@
-package com.pp.common;
+package com.pp.userservice.common;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;

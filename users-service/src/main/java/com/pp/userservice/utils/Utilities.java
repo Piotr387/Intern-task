@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import org.modelmapper.ModelMapper;
 
 public interface Utilities {
 
@@ -38,4 +39,6 @@ public interface Utilities {
 
     String getEmailRegexPattern();
     String createAccessTokenForMicroservice();
+
+    ModelMapper getModelMapper();
 }

@@ -39,3 +39,9 @@ eureka:
       defaultZone: http://127.0.0.1:8761/eureka
     fetch-registry: true
     register-with-eureka: true
+
+feature:
+  controller:
+    versions:
+      register-user: true
+      sign-for-lecture: true

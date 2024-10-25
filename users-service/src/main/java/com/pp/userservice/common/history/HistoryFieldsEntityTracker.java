@@ -1,4 +1,4 @@
-package com.pp.userservice.common;
+package com.pp.userservice.common.history;
 
 import java.io.Serializable;
 import javax.persistence.MappedSuperclass;

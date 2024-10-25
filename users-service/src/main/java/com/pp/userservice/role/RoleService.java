@@ -10,18 +10,18 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class RoleService {
 
-    private final RoleRepository roleRepository;
+  private final RoleRepository roleRepository;
 
-    public RoleEntity findByName(String roleName) {
-        return roleRepository.findByName(roleName).orElseThrow(() -> {
-            throw new UserServiceException(ErrorMessages.NO_ROLE_FOUND_WITH_PROVIDED_NAME.getErrorMessage());
-        });
-    }
+  public RoleEntity getByRoleName(String roleName) {
+    return roleRepository.findByName(roleName).orElseThrow(() -> {
+      throw new UserServiceException(
+          ErrorMessages.NO_ROLE_FOUND_WITH_PROVIDED_NAME.getErrorMessage());
+    });
+  }
 
-    @Transactional
-    public RoleEntity createRoleIfNotFound(String name) {
-        RoleEntity roleEntity = roleRepository.findByName(name).orElseGet(() -> new RoleEntity(name));
-        roleRepository.save(roleEntity);
-        return roleEntity;
-    }
+  @Transactional
+  public void createRoleIfNotPresent(String name) {
+    RoleEntity roleEntity = roleRepository.findByName(name).orElseGet(() -> new RoleEntity(name));
+    roleRepository.save(roleEntity);
+  }
 }

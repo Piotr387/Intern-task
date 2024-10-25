@@ -1,27 +1,29 @@
 package com.pp.userservice.user.api;
 
+import static com.pp.userservice.user.api.UserController.USERS_ENDPOINT;
+
 import com.pp.userservice.lecture.dto.LectureDTO;
-import com.pp.userservice.lecture.dto.LectureDetailsWithUser;
 import com.pp.userservice.lecture.dto.LectureSignUpDTO;
-import com.pp.userservice.lecture.dto.LectureStatisticsDAO;
-import com.pp.userservice.lecture.dto.LectureThematicStatisticDAO;
 import com.pp.userservice.lecture.dto.LectureWithFirstRegistration;
-import com.pp.userservice.lecture.service.LectureService;
 import com.pp.userservice.response.OperationStatusModel;
 import com.pp.userservice.response.RequestOperationName;
 import com.pp.userservice.user.service.UserService;
-import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
+import java.io.IOException;
+import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.io.IOException;
-import java.util.List;
-
-import static com.pp.userservice.user.api.UserController.USERS_ENDPOINT;
+import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(value = USERS_ENDPOINT)
@@ -29,7 +31,6 @@ import static com.pp.userservice.user.api.UserController.USERS_ENDPOINT;
 public class UserController {
 
     public static final String USERS_ENDPOINT = "/users";
-    private final LectureService lectureService;
     private final UserService userService;
 
     /**
@@ -81,23 +82,17 @@ public class UserController {
      *
      * @return "SUCCES" or throw exception
      */
+
     @PostMapping(path = "/sign-up")
     public ResponseEntity<OperationStatusModel> signUpUserForLecture(@RequestBody LectureSignUpDTO lectureSignUpDTO) {
         return new ResponseEntity<>(userService.signUp(lectureSignUpDTO), HttpStatus.OK);
     }
 
+
     @PostMapping(path = "/v2/sign-up")
     public ResponseEntity<OperationStatusModel> signUpUserForLecture(@Valid @RequestBody LectureWithFirstRegistration lectureSignUpDTO) {
         return new ResponseEntity<>(userService.signUp(lectureSignUpDTO), HttpStatus.OK);
     }
-
-    @GetMapping("/organizer")
-    @ResponseStatus(HttpStatus.OK)
-    public List<LectureDetailsWithUser> getLectureDetails(){
-
-        return lectureService.getLecturesWithUser();
-    }
-
 
     /**
      * Endpoint for method POST http://localhost:8080/users/sign-up-register
@@ -106,6 +101,7 @@ public class UserController {
      *
      * @return "SUCCESS" or throw exception
      */
+
     @PostMapping(path = "/sign-up-register")
     public ResponseEntity<OperationStatusModel> signUpRegisterUserForLecture(HttpServletRequest request) {
         return new ResponseEntity<>(userService.signUpRegister(request), HttpStatus.OK);
@@ -132,30 +128,5 @@ public class UserController {
     public ResponseEntity<OperationStatusModel> updateEmail(HttpServletRequest request) {
         userService.updateEmail(request);
         return new ResponseEntity<>(new OperationStatusModel.Builder(RequestOperationName.CHANGE_EMAIL.name()).build(), HttpStatus.OK);
-    }
-
-    /**
-     * Endpoint for method GET http://localhost:8080/users/statistics/lectures-popularity
-     * On this endpoint organizer will get list of LectureStatisticsDAO
-     * objects more about this object in class
-     *
-     * @return list of LectureStatisticsDAO objects with statistics for organizer
-     * sorted by busySeatsOverAllUsers then by takenSeat and then by capacity
-     */
-    @GetMapping(path = "/statistics/lectures-popularity")
-    public ResponseEntity<List<LectureStatisticsDAO>> getLecturesByPopularity() {
-        return new ResponseEntity<>(lectureService.getLecturesByPopularity(), HttpStatus.OK);
-    }
-
-    /**
-     * Endpoint for method GET http://localhost:8080/users/statistics/thematic-path-popularity
-     * On this endpoint organizer will get list of LectureThematicStatisticDAO
-     * objects more about this object in class
-     *
-     * @return list of LectureThematicStatisticDAO objects sorted by busySeatsOverAllSeatsTaken field
-     */
-    @GetMapping(path = "/statistics/thematic-path-popularity")
-    public ResponseEntity<List<LectureThematicStatisticDAO>> getLectures() {
-        return new ResponseEntity<>(lectureService.getLecturesByThematicPathPopularity(), HttpStatus.OK);
     }
 }

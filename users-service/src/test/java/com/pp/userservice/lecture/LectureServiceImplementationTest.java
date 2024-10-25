@@ -28,6 +28,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+// start L4 test 3
 class LectureServiceImplementationTest {
 
     private static LectureServiceImplementation lectureServiceImplementation;
@@ -121,7 +122,7 @@ class LectureServiceImplementationTest {
 
     @Test
     void getLecturesByPopularity() {
-        when(roleService.findByName(anyString())).thenReturn(roleUser);
+        when(roleService.getByRoleName(anyString())).thenReturn(roleUser);
         when(userService.findAllUsers()).thenReturn(getUsers());
 
         List<LectureEntity> lectureEntityList = getLecturesEntity();

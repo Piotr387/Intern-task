@@ -1,5 +1,7 @@
 package com.pp.userservice.user.service;
 
+import com.pp.userservice.common.feature.controller.FeatureController;
+import com.pp.userservice.common.feature.controller.FeatureVersions;
 import com.pp.userservice.lecture.dto.LectureDTO;
 import com.pp.userservice.lecture.dto.LectureSignUpDTO;
 import com.pp.userservice.lecture.dto.LectureWithFirstRegistration;
@@ -29,8 +31,10 @@ public interface UserService {
 
     UserEntity createUserWithPassword(UserDTO userDTO, String password);
 
+    @FeatureController(value = FeatureVersions.REGISTER_USER)
     OperationStatusModel signUp(LectureSignUpDTO lectureSignUpDTO);
 
+    @FeatureController(value = FeatureVersions.REGISTER_USER)
     OperationStatusModel signUpRegister(HttpServletRequest request);
 
     OperationStatusModel signUpForLecture(UserEntity userEntity, String lectureName);
@@ -50,6 +54,7 @@ public interface UserService {
 
     UserDTO getUserAccountDetails(HttpServletRequest request);
 
+    @FeatureController(value = FeatureVersions.SIGN_FOR_LECTURE)
     OperationStatusModel signUp(LectureWithFirstRegistration lectureSignUpDTO);
 
     void saveUser(UserEntity userTest);

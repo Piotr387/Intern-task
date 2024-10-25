@@ -10,7 +10,7 @@ public class SlackNotifier extends NotifierDecorator{
 
     @Override
     public void send(String message) {
-        log.info(message);
+        log.info("Sending Notification to Slack application with content {}", message);
         super.send(message);
     }
 }

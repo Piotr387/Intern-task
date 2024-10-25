@@ -1,7 +1,7 @@
 package com.pp.userservice.user.entity;
 
-import com.pp.userservice.common.HistoryEntityListener;
-import com.pp.userservice.common.HistoryFieldsEntityTracker;
+import com.pp.userservice.common.history.HistoryEntityListener;
+import com.pp.userservice.common.history.HistoryFieldsEntityTracker;
 import com.pp.userservice.lecture.LectureEntity;
 import com.pp.userservice.role.RoleEntity;
 import java.io.Serial;
@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.FetchType;
@@ -18,7 +17,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.Transient;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

@@ -1,4 +1,4 @@
-package com.pp.common;
+package com.pp.userservice.common;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.ClassPathResource;

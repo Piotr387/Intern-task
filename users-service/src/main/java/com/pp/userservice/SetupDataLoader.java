@@ -36,8 +36,8 @@ class SetupDataLoader implements CommandLineRunner {
     if (alreadySetup)
       return;
 
-    roleService.createRoleIfNotFound("ROLE_ORGANIZER");
-    roleService.createRoleIfNotFound("ROLE_USER");
+    roleService.createRoleIfNotPresent("ROLE_ORGANIZER");
+    roleService.createRoleIfNotPresent("ROLE_USER");
 
     String thematicPathFrontend = "Frontend";
     String thematicPathBackend = "Backend";
@@ -87,12 +87,12 @@ class SetupDataLoader implements CommandLineRunner {
 
     UserEntity userOrganizator = userService.createUserWithPassword(new UserDTO("organizator1", "organizator1@gmail.com"), "organizator1");
     userOrganizator.getRoles()
-        .add(roleService.findByName("ROLE_ORGANIZER"));
+        .add(roleService.getByRoleName("ROLE_ORGANIZER"));
     userService.saveUser(userOrganizator);
 
     UserEntity userTest = userService.createUserWithPassword(new UserDTO("test", "test@gmail.com"), "test");
     userTest.getRoles()
-        .add(roleService.findByName("ROLE_USER"));
+        .add(roleService.getByRoleName("ROLE_USER"));
     userService.saveUser(userTest);
 
     alreadySetup = true;

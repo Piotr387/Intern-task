@@ -7,6 +7,7 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pp.userservice.response.ErrorMessages;
 import com.pp.userservice.response.UserServiceException;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
@@ -21,6 +22,7 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
+
 @Component
 public class UtilitiesImpl implements Utilities {
     private static final Random random = new SecureRandom();
@@ -33,6 +35,7 @@ public class UtilitiesImpl implements Utilities {
      * Valid characters: a-z, A-Z, 0-9, points, dashes and underscores.
      */
     private static final String USERNAME_REGEX_PATTERN = "^[a-zA-Z0-9._-]{3,}$";
+    private final ModelMapper modelMapper = new ModelMapper();
 
     public String getEmailRegexPattern(){
         return EMAIL_REGEX_PATTERN;
@@ -46,7 +49,7 @@ public class UtilitiesImpl implements Utilities {
      * Function that will generate password for each user that will register, this password will be send via
      * email that he decide to sign up for lecture.
      */
-    private String generateRandomString(int length) {
+    String generateRandomString(int length) {
         StringBuilder returnValue = new StringBuilder(length);
 
         for (int i = 0; i < length; i++) {
@@ -94,6 +97,11 @@ public class UtilitiesImpl implements Utilities {
 
     public String createAccessTokenForMicroservice(){
         return createAccessToken("techUser", "none", List.of());
+    }
+
+    @Override
+    public ModelMapper getModelMapper() {
+        return this.modelMapper;
     }
 
     @Override

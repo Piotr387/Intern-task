@@ -1,6 +1,12 @@
-package com.pp.userservice.user;
+package com.pp.userservice.user.api;
 
-import static com.pp.userservice.response.ErrorMessages.*;
+import static com.pp.userservice.response.ErrorMessages.EMAIL_ALREADY_TAKEN;
+import static com.pp.userservice.response.ErrorMessages.EMAIL_MISS_PATTERN;
+import static com.pp.userservice.response.ErrorMessages.LECTURE_NOT_FOUND_BY_NAME;
+import static com.pp.userservice.response.ErrorMessages.LOGIN_ALREADY_TAKEN;
+import static com.pp.userservice.response.ErrorMessages.LOGIN_MISS_PATTERN;
+import static com.pp.userservice.response.ErrorMessages.NO_FREE_SEATS_AT_LECTURE;
+import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -12,43 +18,39 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.pp.amqp.RabbitMQMessageProducer;
-import com.pp.userservice.IntegrationBaseTest;
+import com.pp.userservice.CommonTest;
 import com.pp.userservice.lecture.dto.LectureSignUpDTO;
 import com.pp.userservice.response.ErrorMessages;
 import com.pp.userservice.response.OperationStatusModel;
 import com.pp.userservice.response.RequestOperationName;
-import com.pp.userservice.user.api.UserController;
-import com.pp.userservice.user.api.UserDTO;
 import com.pp.userservice.utils.Utilities;
-
 import java.util.Arrays;
 import java.util.List;
-
 import org.apache.http.HttpHeaders;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.system.CapturedOutput;
+import org.springframework.boot.test.system.OutputCaptureExtension;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultMatcher;
 
-class UserControllerTest extends IntegrationBaseTest {
+@ExtendWith(OutputCaptureExtension.class)
+class UserControllerTest extends CommonTest {
 
   @Autowired
   private ObjectMapper objectMapper;
   @Autowired
   private Utilities utilities;
-  @MockBean
-  private RabbitMQMessageProducer rabbitMQMessageProducer;
   private static final String NEW_EMAIL = "newUser@gmail.com";;
   private static final String NEW_USER = "newUser";
   private static final String ROLE_USER = "ROLE_USER";
   private static final String ROLE_ORGANIZER = "ROLE_ORGANIZER";
 
   @Test
-  void signUpUserForLecture_whenProvidedCorrectRequestAndFreeSeatsAreAvaible_ReturnOk() throws Exception {
+  void signUpUserForLecture_whenProvidedCorrectRequestAndFreeSeatsAreAvaible_ReturnOk(CapturedOutput output) throws Exception {
 
     // given
     var url = createUrl("/sign-up");
@@ -68,6 +70,7 @@ class UserControllerTest extends IntegrationBaseTest {
     var expectedResponseAsString = objectMapper.writeValueAsString(expectedResponse);
     assertEquals(expectedResponseAsString, response);
 
+    assertThat(output).contains("Execution time of signUp:");
   }
 
   @ParameterizedTest
@@ -157,7 +160,7 @@ class UserControllerTest extends IntegrationBaseTest {
   }
 
   @Test
-  void getNewAccessToken_WhenProvidedInCorrectRefreshToken_ReturnIsForbidden() throws Exception {
+  void getNewAccessToken_WhenProvidedInCorrectRefreshToken_ReturnIsForbidden(CapturedOutput output) throws Exception {
 
     // given
     var url = createUrl("/token/refresh");
@@ -167,6 +170,8 @@ class UserControllerTest extends IntegrationBaseTest {
     var response = mockMvc.perform(get(url).servletPath("/users/token/refresh").header(HttpHeaders.AUTHORIZATION, "Bearer " + expiredRefreshToken))
             .andExpect(status().isForbidden())
             .andExpect(jsonPath("$.error_message").value("The Token has expired on Thu May 12 14:22:35 CEST 2022."));
+
+    assertThat(output).contains("Execution time of getRefreshToken:");
   }
 
   private void checkIfTokenContainsExpectedRoles(String token, List<String> roles) {

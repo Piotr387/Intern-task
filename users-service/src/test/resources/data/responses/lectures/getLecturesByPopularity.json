@@ -1,0 +1,116 @@
+[
+  {
+    "id": "1",
+    "name": "Lecture 1 at 10:00",
+    "startTime": "10:00:00",
+    "thematicPath": "Frontend",
+    "users": [
+      {
+        "login": "username1",
+        "email": "username1@username1.com"
+      },
+      {
+        "login": "username2",
+        "email": "username2@username2.com"
+      },
+      {
+        "login": "username3",
+        "email": "username3@username3.com"
+      },
+      {
+        "login": "username4",
+        "email": "username4@username4.com"
+      },
+      {
+        "login": "username5",
+        "email": "username5@username5.com"
+      }
+    ]
+  },
+  {
+    "id": "2",
+    "name": "Lecture 2 at 10:00",
+    "startTime": "10:00:00",
+    "thematicPath": "Backend",
+    "users": []
+  },
+  {
+    "id": "3",
+    "name": "Lecture 3 at 10:00",
+    "startTime": "10:00:00",
+    "thematicPath": "Architect",
+    "users": []
+  },
+  {
+    "id": "4",
+    "name": "Lecture 1 at 12:00",
+    "startTime": "12:00:00",
+    "thematicPath": "Frontend",
+    "users": []
+  },
+  {
+    "id": "5",
+    "name": "Lecture 2 at 12:00",
+    "startTime": "12:00:00",
+    "thematicPath": "Backend",
+    "users": [
+      {
+        "login": "username1",
+        "email": "username1@username1.com"
+      },
+      {
+        "login": "username2",
+        "email": "username2@username2.com"
+      },
+      {
+        "login": "username3",
+        "email": "username3@username3.com"
+      },
+      {
+        "login": "username4",
+        "email": "username4@username4.com"
+      }
+    ]
+  },
+  {
+    "id": "6",
+    "name": "Lecture 3 at 12:00",
+    "startTime": "12:00:00",
+    "thematicPath": "Architect",
+    "users": []
+  },
+  {
+    "id": "7",
+    "name": "Lecture 1 at 14:00",
+    "startTime": "14:00:00",
+    "thematicPath": "Frontend",
+    "users": []
+  },
+  {
+    "id": "8",
+    "name": "Lecture 2 at 14:00",
+    "startTime": "14:00:00",
+    "thematicPath": "Backend",
+    "users": [
+      {
+        "login": "username6",
+        "email": "username6@username6.com"
+      },
+      {
+        "login": "username7",
+        "email": "username7@username7.com"
+      },
+      {
+        "login": "username8",
+        "email": "username8@username8.com"
+      }
+    ]
+  },
+  {
+    "id": "9",
+    "name": "Lecture 3 at 14:00",
+    "startTime": "14:00:00",
+    "thematicPath": "Architect",
+    "users": []
+  }
+]
