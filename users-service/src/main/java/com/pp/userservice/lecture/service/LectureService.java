@@ -1,13 +1,10 @@
 package com.pp.userservice.lecture.service;
 
 import com.pp.userservice.lecture.LectureEntity;
-import com.pp.userservice.lecture.dto.LectureDTO;
-import com.pp.userservice.lecture.dto.LectureDetailsDTO;
-import com.pp.userservice.lecture.dto.LectureDetailsWithUser;
-import com.pp.userservice.lecture.dto.LectureStatisticsDAO;
-import com.pp.userservice.lecture.dto.LectureThematicStatisticDAO;
+import com.pp.userservice.lecture.dto.*;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Interface LectureService it's contains all method that used in program
@@ -44,4 +41,12 @@ public interface LectureService {
     LectureEntity findByName(String lectureName);
 
     List<LectureDetailsDTO> getLecturesDetails();
+
+    void deleteLecture(String lectureName);
+
+    List<LectureDTO> getLecturesByExpressions(String thematicPath1, String thematicPath2, String startTime);
+
+    List<LectureIteratedDTO> getLecturesIterated();
+
+    List<Map<String, List<String>>> getLecureSyllabus(String thematicPath);
 }

@@ -23,11 +23,14 @@ import static javax.persistence.GenerationType.IDENTITY;
 @Setter
 @NoArgsConstructor
 public class LectureEntity implements Serializable {
+    private static final int MAX_NUMBER_OF_ATTENDANTS = 5;
 
     @Serial
     private static final long serialVersionUID = 2405172041950251807L;
+
+    //Magic number removal
     @Transient
-    private static final int CAPACITY = 5;
+    private static final int CAPACITY = MAX_NUMBER_OF_ATTENDANTS;
     @Id
     @GeneratedValue(strategy = IDENTITY)
     private long id;
@@ -36,7 +39,7 @@ public class LectureEntity implements Serializable {
     private String thematicPath;
     @Column(name = "start_time")
     private LocalTime startTime;
-    @ManyToMany(mappedBy = "lectureEntityList")
+    @ManyToMany(mappedBy = "lectureEntityList", cascade = CascadeType.ALL)
     private List<UserEntity> userEntityList = new ArrayList<>(CAPACITY);
 
     public LectureEntity(String name, String thematicPath, LocalTime startTime) {

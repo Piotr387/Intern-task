@@ -1,13 +1,19 @@
 package com.pp.userservice.lecture.service;
 
 
+import com.pp.userservice.lecture.DesignPatterns.Interpreter.Expression;
+import com.pp.userservice.lecture.DesignPatterns.Interpreter.Expressions.AndExpression;
+import com.pp.userservice.lecture.DesignPatterns.Interpreter.Expressions.OrExpression;
+import com.pp.userservice.lecture.DesignPatterns.Interpreter.Expressions.StartTimeExpression;
+import com.pp.userservice.lecture.DesignPatterns.Interpreter.Expressions.ThematicPathExpression;
+import com.pp.userservice.lecture.DesignPatterns.Iterator.Iterator;
+import com.pp.userservice.lecture.DesignPatterns.Iterator.LectureCollection;
+import com.pp.userservice.lecture.DesignPatterns.Strategy.Strategies.ArchitectStrategy;
+import com.pp.userservice.lecture.DesignPatterns.Strategy.Strategies.BackendStrategy;
+import com.pp.userservice.lecture.DesignPatterns.Strategy.Strategies.FrontendStrategy;
 import com.pp.userservice.lecture.LectureEntity;
 import com.pp.userservice.lecture.LectureRepository;
-import com.pp.userservice.lecture.dto.LectureDTO;
-import com.pp.userservice.lecture.dto.LectureDetailsDTO;
-import com.pp.userservice.lecture.dto.LectureDetailsWithUser;
-import com.pp.userservice.lecture.dto.LectureStatisticsDAO;
-import com.pp.userservice.lecture.dto.LectureThematicStatisticDAO;
+import com.pp.userservice.lecture.dto.*;
 import com.pp.userservice.responde.ErrorMessages;
 import com.pp.userservice.responde.UserServiceException;
 import com.pp.userservice.role.RoleEntity;
@@ -20,6 +26,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -133,4 +140,60 @@ public class LectureServiceImplementation implements LectureService {
                         allBusySeats))
                 .toList();
     }
+
+    //COMMAND IMPLEMENTED
+    @Override
+    public void deleteLecture(String lectureName) {
+        lectureRepository.deleteByThematicPath(lectureName);
+    }
+
+
+    //EXPRESSION IMPLEMENTED
+    @Override
+    public List<LectureDTO> getLecturesByExpressions(String thematicPath1, String thematicPath2, String startTime) {
+        ModelMapper modelMapper = new ModelMapper();
+
+        Expression themePathExpression = new OrExpression(
+                new ThematicPathExpression(thematicPath1),
+                new ThematicPathExpression(thematicPath2)
+        );
+
+        Expression finalExpression = new AndExpression(themePathExpression, new StartTimeExpression(startTime));
+
+        return lectureRepository.findAll().stream()
+                .map(entity -> modelMapper.map(entity, LectureDTO.class))
+                .filter(finalExpression::interpret)
+                .toList();
+    }
+
+    //ITERATOR IMPLEMENTED
+    public List<LectureIteratedDTO> getLecturesIterated(){
+        LectureCollection lectureCollection = new LectureCollection(
+                lectureRepository.findAll().stream()
+                .map(entity -> new ModelMapper().map(entity, LectureDTO.class))
+                .toList()
+        );
+
+        Iterator<LectureDTO> iterator = lectureCollection.createIterator();
+        List<LectureIteratedDTO> result = new ArrayList<>();
+
+        int i = 1;
+        while (iterator.hasNext()) {
+            LectureDTO lectureDTO = iterator.next();
+            result.add(new LectureIteratedDTO(i, lectureDTO.getName(), lectureDTO.getThematicPath(), lectureDTO.getStartTime()));
+            i ++;
+        }
+
+        return result;
+    }
+
+    //STRATEGY IMPLEMENTED
+    public List<Map<String, List<String>>> getLecureSyllabus(String thematicPath){
+        return switch (thematicPath) {
+            case "frontend" -> new FrontendStrategy().show();
+            case "backend" -> new BackendStrategy().show();
+            case "architect" -> new ArchitectStrategy().show();
+            default -> throw new IllegalArgumentException("Unexpected value: " + thematicPath);
+        };
+    };
 }

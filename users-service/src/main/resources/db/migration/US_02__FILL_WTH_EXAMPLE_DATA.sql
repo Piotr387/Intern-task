@@ -51,3 +51,6 @@ VALUES
     ( 10, 8, 8 ),
     ( 11, 9, 8 ),
     ( 12, 10, 8 );
+
+INSERT INTO NOTIFICATIONS(ID, USER_ID, MESSAGE)
+VALUES (1, 2, 'first message');

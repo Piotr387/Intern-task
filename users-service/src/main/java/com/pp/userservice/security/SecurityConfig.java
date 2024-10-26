@@ -29,6 +29,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private static final String USER_ROLE = "ROLE_USER";
     private static final String ORGANIZER_ROLE = "ROLE_ORGANIZER";
     private static final List<String> ENDPOINT_NOT_SECURED_BY_ANY_ROLE = List.of(
+            "/notifications/**",
             "/users/login",
             "/users/token/refresh/**",
             "/lectures/**",
